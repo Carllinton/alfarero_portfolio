@@ -1,4 +1,4 @@
-name: Deploy The Desk to GitHub Pages
+name: Deploy Keynote Portfolio to GitHub Pages
 on:
   push:
     branches: [main]
