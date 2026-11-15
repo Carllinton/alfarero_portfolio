@@ -1,0 +1,126 @@
+---
+import type { Profile, WorkCategory } from "../../portfolio.config";
+import "../styles/keynote.css";
+const { p, category, slug = "" } = Astro.props as { p: Profile; category: WorkCategory; slug?: string };
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const prefix = base + "/" + (slug ? slug + "/" : "");
+const home = prefix;
+const categoryList = p.workCategories;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const accent = /^#[\da-fA-F]{6}$/.test(p.accent) ? p.accent : "#9BE9BB";
+const totalImages = category.entries.reduce((count, entry) => count + entry.images.length, 0);
+const asset = (url: string) => /^(https?:|mailto:|#)/.test(url) ? url : base + "/" + url.replace(/^\//, "");
+const imgContent = category.entries.flatMap(entry => entry.images.map(img => ({ ...img, project: entry.title })));
+const cover = imgContent[0]?.url;
+---
+<!doctype html>
+<html lang="en" data-theme="dark" style={`--accent:${accent}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101112" />
+    <meta name="description" content={category.description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={category.title + " — " + p.name} />
+    <meta property="og:description" content={category.description} />
+    <meta property="og:url" content={canonical.toString()} />
+    {cover && <meta property="og:image" content={cover} />}
+    <link rel="canonical" href={canonical.toString()} />
+    <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />
+    <title>{category.title} — {p.firstName}'s Work</title>
+  </head>
+  <body class="gallery-page">
+    <a class="a11y-skip" href="#gallery-content">Skip to works</a>
+    <header class="site-header gallery-header">
+      <a class="identity" href={home} aria-label={"Back to " + p.name + "'s portfolio"}>
+        <span class="identity-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>{p.firstName}<span class="identity-period">.</span></span>
+      </a>
+      <div class="header-end">
+        <span class="header-status">SELECTED WORK</span>
+        <button class="theme-button" type="button" aria-label="Switch to light theme" aria-pressed="false"><span class="theme-glyph" aria-hidden="true">◐</span><span class="theme-word">Light</span></button>
+        <a class="summary-link" href={home + "#work-title"}>← Back to the story</a>
+      </div>
+    </header>
+    <main id="gallery-content">
+      <div class="gallery-hero">
+        <div class="gallery-hero-inner">
+          <p class="eyebrow gallery-eyebrow">{category.eyebrow}</p>
+          <h1>{category.title}<span class="identity-period">.</span></h1>
+          <p class="gallery-deck">{category.description}</p>
+          <div class="gallery-meta"><span>{String(category.entries.length).padStart(2,"0")} collections</span><span>{totalImages ? totalImages + " original visuals" : "Case studies & concepts"}</span></div>
+        </div>
+        <div class="gallery-hero-decoration" aria-hidden="true">{category.visual === "design" ? "Aa" : category.visual === "network" ? "↗" : category.visual === "editorial" ? "¶" : "{ }"}</div>
+      </div>
+      <nav class="gallery-category-nav" aria-label="Work categories">
+        {categoryList.map((item, index) => (
+          <a class={item.slug === category.slug ? "gallery-category-link is-active" : "gallery-category-link"} href={prefix + "works/" + encodeURIComponent(item.slug) + "/"} aria-current={item.slug === category.slug ? "page" : undefined}><span>{String(index+1).padStart(2,"0")}</span> {item.title}</a>
+        ))}
+      </nav>
+      <div class="gallery-collections">
+        {category.entries.map((entry, index) => {
+          const caseStudy = p.projects.find(project => project.title === entry.projectTitle);
+          return <section class="gallery-collection" aria-labelledby={"collection-"+index}>
+            <div class="gallery-collection-head">
+              <div>
+                <p class="eyebrow">{entry.label}</p>
+                <h2 id={"collection-"+index}>{entry.title}</h2>
+                <p class="gallery-collection-description">{entry.description}</p>
+              </div>
+              <span class="gallery-collection-index">{String(index+1).padStart(2,"0")} / {String(category.entries.length).padStart(2,"0")}</span>
+            </div>
+            {entry.images.length ? (
+              <div class="art-gallery">
+                {entry.images.map((media, idx) => (
+                  <a class="art-tile" href={media.url} target="_blank" rel="noopener noreferrer" data-lightbox aria-label={"View " + media.caption + " in " + entry.title}>
+                    <span class="art-image-frame"><img src={media.url} loading="lazy" decoding="async" alt={media.alt} /></span>
+                    <span class="art-tile-meta"><span>{media.caption}</span><span class="art-zoom" aria-hidden="true">↗</span></span>
+                  </a>
+                ))}
+              </div>
+            ) : caseStudy ? (
+              <div class="gallery-case-panel">
+                <div class={"case-render case-render-" + caseStudy.visual.kind}>
+                  <span class="case-render-overline">{caseStudy.visual.kicker}</span>
+                  <strong>{caseStudy.visual.title}</strong>
+                  <div class="case-render-rows">{caseStudy.visual.rows.map((row, i) => <div><span>{String(i+1).padStart(2,"0")}</span>{row}</div>)}</div>
+                  <span class="case-render-caption">Concept representation, not a screenshot</span>
+                </div>
+                <div class="gallery-case-description">
+                  <span class="eyebrow">CASE STUDY</span>
+                  <h3>{caseStudy.outcome}</h3>
+                  <p>{caseStudy.problem}</p>
+                  <p>{caseStudy.process}</p>
+                  <p>{caseStudy.result}</p>
+                  {caseStudy.metrics.length > 0 && <p class="case-verified">{caseStudy.metrics.join(" · ")}</p>}
+                </div>
+              </div>
+            ) : (
+              <p class="gallery-empty-note">Images for this work have not been published yet.</p>
+            )}
+            {entry.links?.length ? (
+              <div class="gallery-external-links">{entry.links.map(link => (
+                <a href={asset(link.url)} target="_blank" rel="noopener noreferrer">{link.label}<span aria-hidden="true">↗</span></a>
+              ))}</div>
+            ) : null}
+          </section>
+        })}
+      </div>
+      <footer class="gallery-footer">
+        <div><p class="eyebrow">KEEP EXPLORING</p><h2>More than one way to create.</h2></div>
+        <div class="gallery-footer-links">
+          {categoryList.filter(item => item.slug !== category.slug).map(item => (
+            <a href={prefix + "works/" + encodeURIComponent(item.slug) + "/"}>{item.title}<span aria-hidden="true">↗</span></a>
+          ))}
+          <a href={home + "#work-title"}>Back to the keynote<span aria-hidden="true">←</span></a>
+        </div>
+      </footer>
+    </main>
+    <dialog class="gallery-lightbox" aria-label="Artwork viewer">
+      <div class="lightbox-topline"><span class="lightbox-count" aria-live="polite"></span><button type="button" class="lightbox-close" aria-label="Close image viewer">Close <span aria-hidden="true">×</span></button></div>
+      <div class="lightbox-display"><button type="button" class="lightbox-prev" aria-label="Previous artwork">‹</button><img class="lightbox-image" src="" alt="" /><button type="button" class="lightbox-next" aria-label="Next artwork">›</button></div>
+      <div class="lightbox-caption"><strong></strong><span></span><a class="lightbox-full" target="_blank" rel="noopener noreferrer">Open original ↗</a></div>
+    </dialog>
+    <script>import "../scripts/gallery.ts";</script>
+  </body>
+</html>
