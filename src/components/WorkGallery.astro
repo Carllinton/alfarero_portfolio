@@ -24,7 +24,7 @@ const cover = imgContent[0]?.url;
     <meta property="og:title" content={category.title + " — " + p.name} />
     <meta property="og:description" content={category.description} />
     <meta property="og:url" content={canonical.toString()} />
-    {cover && <meta property="og:image" content={cover} />}
+    {cover && <meta property="og:image" content={asset(cover)} />}
     <link rel="canonical" href={canonical.toString()} />
     <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />
     <title>{category.title} — {p.firstName}'s Work</title>
@@ -48,6 +48,7 @@ const cover = imgContent[0]?.url;
           <p class="eyebrow gallery-eyebrow">{category.eyebrow}</p>
           <h1>{category.title}<span class="identity-period">.</span></h1>
           <p class="gallery-deck">{category.description}</p>
+          <a class="gallery-jump" href="#collections">See the projects <span aria-hidden="true">↓</span></a>
           <div class="gallery-meta"><span>{String(category.entries.length).padStart(2,"0")} collections</span><span>{totalImages ? totalImages + " original visuals" : "Case studies & concepts"}</span></div>
         </div>
         <div class="gallery-hero-decoration" aria-hidden="true">{category.visual === "design" ? "Aa" : category.visual === "network" ? "↗" : category.visual === "editorial" ? "¶" : "{ }"}</div>
@@ -57,7 +58,7 @@ const cover = imgContent[0]?.url;
           <a class={item.slug === category.slug ? "gallery-category-link is-active" : "gallery-category-link"} href={prefix + "works/" + encodeURIComponent(item.slug) + "/"} aria-current={item.slug === category.slug ? "page" : undefined}><span>{String(index+1).padStart(2,"0")}</span> {item.title}</a>
         ))}
       </nav>
-      <div class="gallery-collections">
+      <div class="gallery-collections" id="collections">
         {category.entries.map((entry, index) => {
           const caseStudy = p.projects.find(project => project.title === entry.projectTitle);
           return <section class="gallery-collection" aria-labelledby={"collection-"+index}>
@@ -72,8 +73,8 @@ const cover = imgContent[0]?.url;
             {entry.images.length ? (
               <div class="art-gallery">
                 {entry.images.map((media, idx) => (
-                  <a class="art-tile" href={media.url} target="_blank" rel="noopener noreferrer" data-lightbox aria-label={"View " + media.caption + " in " + entry.title}>
-                    <span class="art-image-frame"><img src={media.url} loading="lazy" decoding="async" alt={media.alt} /></span>
+                  <a class="art-tile" href={asset(media.url)} target="_blank" rel="noopener noreferrer" data-lightbox aria-label={"View " + media.caption + " in " + entry.title}>
+                    <span class="art-image-frame"><img src={asset(media.url)} loading="lazy" decoding="async" alt={media.alt} /></span>
                     <span class="art-tile-meta"><span>{media.caption}</span><span class="art-zoom" aria-hidden="true">↗</span></span>
                   </a>
                 ))}
