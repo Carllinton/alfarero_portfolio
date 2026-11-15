@@ -68,3 +68,59 @@ Deployment and Lighthouse checks should both be green in **Actions** before publ
 6. Send a test Formspree message from the published site.
 7. Replace visual mockups with real screenshots when available.
 8. Add authentic testimonials only after receiving permission.
+
+
+## Work categories and galleries
+
+**The Work** on the homepage now introduces **categories**, not individual projects.
+Each chapter links to a separate gallery page:
+
+- `/works/web-systems/` — 7 web-system projects, including Meljune POS, BAR College, Flories, House of Origami, Autobiography, iPhone UI, and SortIt.
+- `/works/graphic-design/` — 3 collections featuring actual Respresso advertisements, CTT branding, and personal/multimedia artwork.
+- `/works/networking/` — 5 documented networking collections, including MISV, DHCP relay, static routing, physical workspace, and VLSM.
+
+Sample profession pages are also generated, e.g. `/designer/works/editorial/`.
+
+### Where the gallery content lives
+
+In **`portfolio.config.ts`**, each profile has `workCategories`. Each category controls its
+name, slug, one-line statement, visual treatment, introductory text, and `entries`. An entry
+supports `title`, `label`, `description`, an array of `images` with `url`, `alt` and
+`caption`, optional external `links`, and an optional `projectTitle` matching a case
+study from `projects`.
+
+For example, to add an original artwork:
+
+```ts
+{
+  title: "New poster series",
+  label: "GRAPHIC DESIGN · POSTERS",
+  description: "A short description of the project.",
+  images: [
+    {
+      url: "works/my-new-poster.webp",
+      alt: "Blue poster with bold geometric typography",
+      caption: "Poster 01"
+    }
+  ]
+}
+```
+
+For local media, place optimized artwork at `public/works/my-new-poster.webp`. The site
+automatically resolves relative URLs under the correct GitHub Pages base path.
+
+**Source material:** The developer's gallery currently references actual published images in
+the separate public repository
+[Carllinton/Portfolio](https://github.com/Carllinton/Portfolio). The artwork is not
+invented or represented as brand-new deliverables. These original asset URLs remain dependent
+on that repository staying publicly available. Large originals, including high-resolution
+poster images, are loaded lazily. For completely independent hosting or faster image transfer,
+replace their URLs in the config with locally optimized versions under `public/works/`.
+
+**Artwork viewer:** JavaScript upgrades image links into a native dialog with keyboard
+left/right navigation and Escape to close. Without JavaScript, the links still open the
+original images. Category links are normal anchor elements so back/forward navigation,
+direct links, and search indexing work.
+
+The recruiter summary continues to show the three strongest **individual case studies**;
+it remains intentionally different from the category-driven presentation.
