@@ -202,3 +202,14 @@ html[data-theme=light] .product-render .render-glow{border-color:rgba(0,0,0,.2)}
  .project-chapter{height:auto!important;min-height:100svh}.project-sticky{position:relative;height:auto;min-height:100svh}
  .name-ink{transform:none!important}
 }
+
+/* CSS-only recruiter escape hatch when JavaScript is unavailable. */
+body:has(#summary:target) .story,
+body:has(#summary-contact:target) .story{display:none}
+body:has(#summary:target) .recruiter-view,
+body:has(#summary-contact:target) .recruiter-view{display:block}
+body:has(#summary:target) .site-header .summary-link,
+body:has(#summary-contact:target) .site-header .summary-link{display:none}
+@media(prefers-reduced-motion:reduce){
+  .scroll-cue,.render-device,.project-copy{opacity:1!important}
+}
