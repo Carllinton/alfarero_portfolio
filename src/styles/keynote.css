@@ -223,3 +223,121 @@ body:has(#summary-contact:target) .site-header .summary-link{display:none}
 .visual-editorial .render-bars b{background:#a05c46}
 
 .project-image video{display:block;width:100%;max-height:65vh;background:#101112;object-fit:contain}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   DIRECTED ATTENTION / MOTION ACT II
+   Every keyframe has one job: tell visitors where to look next.
+   No perpetual ambient animation or layout-shifting properties.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* A quiet reading-progress indicator gives visitors their bearings. */
+.reading-progress{
+  position:absolute;inset:auto 0 -1px;height:2px;z-index:2;
+  background:var(--accent);transform:scaleX(0);transform-origin:0 50%;
+  pointer-events:none;
+}
+
+/* The small accent line signals the current thought before the big reveal. */
+.story .eyebrow{display:inline-block;position:relative}
+.story .eyebrow::after{
+  content:"";display:block;width:38px;height:2px;margin-top:13px;
+  background:currentColor;opacity:.58;transform-origin:left center;
+}
+@keyframes keynote-focus-line {
+  from{transform:scaleX(0);opacity:0}
+  to{transform:scaleX(1);opacity:.58}
+}
+@keyframes keynote-chapter-mark {
+  from{opacity:0;transform:translate3d(0,13px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes keynote-proof-enter {
+  from{opacity:0;transform:translate3d(0,18px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes keynote-visual-halo {
+  from{opacity:0;transform:scale(.7)}
+  to{opacity:.8;transform:scale(.96)}
+}
+@keyframes keynote-evidence-bar {
+  from{transform:scaleX(0);opacity:.2}
+  to{transform:scaleX(1);opacity:1}
+}
+@keyframes keynote-scroll-track {
+  from{opacity:0;transform:scaleX(0)}
+  to{opacity:1;transform:scaleX(1)}
+}
+@keyframes keynote-action-arrow {
+  0%{transform:translate3d(-5px,5px,0);opacity:.4}
+  100%{transform:translate3d(0,0,0);opacity:1}
+}
+@keyframes keynote-signoff-line {
+  from{transform:scaleX(0);opacity:0}
+  to{transform:scaleX(1);opacity:1}
+}
+
+/* Masked words are generated progressively, but original HTML is complete. */
+.headline-word{display:inline-block;overflow:hidden;vertical-align:top;padding:.06em 0 .09em;margin:-.06em 0 -.09em}
+.headline-word .word-ink{display:inline-block;will-change:transform}
+.scene .scene-number{pointer-events:none}
+.motion-ready .scene.is-current .scene-number{
+  animation:keynote-chapter-mark .8s var(--ease) both;
+}
+.motion-ready .scene.is-current .eyebrow::after,
+.motion-ready .scene-intro .eyebrow::after{
+  animation:keynote-focus-line .7s var(--ease) both;
+}
+.motion-ready .scene-intro .eyebrow::after{animation-delay:.25s}
+.motion-ready .scene-intro .scroll-rule{
+  animation:keynote-scroll-track .95s var(--ease) 2.35s both;
+}
+.motion-ready .project-chapter.is-current .render-glow{
+  animation:keynote-visual-halo 1.25s var(--ease) both;
+}
+.motion-ready .project-chapter.is-current .render-row{
+  animation:keynote-proof-enter .72s var(--ease) both;
+}
+.motion-ready .project-chapter.is-current .render-row:nth-child(1){animation-delay:.16s}
+.motion-ready .project-chapter.is-current .render-row:nth-child(2){animation-delay:.28s}
+.motion-ready .project-chapter.is-current .render-row:nth-child(3){animation-delay:.40s}
+.motion-ready .project-chapter.is-current .render-row:nth-child(4){animation-delay:.52s}
+.motion-ready .project-chapter.is-current .render-row:nth-child(n+5){animation-delay:.64s}
+.motion-ready .project-chapter.is-current .render-bars b{
+  animation:keynote-evidence-bar .6s var(--ease) both;
+  transform-origin:left center;
+}
+.motion-ready .project-chapter.is-current .render-bars b:nth-child(2){animation-delay:.16s}
+.motion-ready .project-chapter.is-current .render-bars b:nth-child(3){animation-delay:.30s}
+.motion-ready .scene-surprise.is-current .surprise-detail::before{
+  animation:keynote-signoff-line 1.1s var(--ease) .45s both;
+}
+.scene-surprise .surprise-detail::before{
+  content:"";display:block;width:80px;height:2px;background:var(--accent);
+  margin:0 auto 26px;transform-origin:center;
+}
+.motion-ready .scene-contact.is-current .primary-action .action-arrow{
+  animation:keynote-action-arrow .9s var(--ease) .4s both;
+}
+
+/* Hover confirms an affordance instead of competing with the headline. */
+@media(hover:hover) and (pointer:fine){
+  .summary-link,.back-story,.project-links a,.external-link{
+    position:relative;
+  }
+  .back-story::after,.project-links a::after{
+    content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;
+    background:var(--accent);transform:scaleX(0);transform-origin:left center;
+    transition:transform .48s var(--ease);
+  }
+  .back-story:hover::after,.project-links a:hover::after{transform:scaleX(1)}
+}
+
+/* Reduced motion: skip the choreography and keep every message visible. */
+@media(prefers-reduced-motion:reduce){
+  .headline-word .word-ink{transform:none!important;opacity:1!important;will-change:auto}
+  .story .eyebrow::after,
+  .scene-surprise .surprise-detail::before{transform:scaleX(1)!important}
+  .render-glow,.render-row,.render-bars b{opacity:1!important;animation:none!important}
+  .reading-progress{display:none}
+}
