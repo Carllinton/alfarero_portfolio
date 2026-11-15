@@ -802,3 +802,16 @@ body:has(dialog[open]) {
 .tag svg {
   color: var(--accent);
 }
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.night :is(a, button, summary, input, textarea):focus-visible {
+  outline-color: #f3dca6;
+}

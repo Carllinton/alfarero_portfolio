@@ -56,7 +56,7 @@ function lighting(night: boolean) {
   lamp.querySelector("span")!.textContent = night ? "Night" : "Day";
   lamp.setAttribute(
     "aria-label",
-    night ? "Switch to day lighting" : "Switch to night lighting",
+    night ? "Night lighting, switch to day" : "Day lighting, switch to night",
   );
 }
 lighting(pref("light") === "night");
@@ -95,7 +95,16 @@ function route() {
     isQuick = id === "quick",
     tpl = document.getElementById("tpl-" + id) as HTMLTemplateElement | null;
   gsap.killTweensOf([layout, dialog]);
-  gsap.set(layout, { clearProps: "transform,transformOrigin" });
+  if (dialog.open && !tpl && !reduced.matches) {
+    gsap.to(layout, {
+      scale: 1,
+      duration: 0.24,
+      ease: "power2.out",
+      clearProps: "transform,transformOrigin",
+    });
+  } else {
+    gsap.set(layout, { clearProps: "transform,transformOrigin" });
+  }
   if (dialog.open) {
     dialog.close();
     opener?.focus({ preventScroll: true });
@@ -119,12 +128,12 @@ function route() {
     ).find((a) => a.hash === location.hash) || null;
   const target = $("#sheet-content");
   target.replaceChildren(tpl.content.cloneNode(true));
-  if (opener && !reduced.matches && innerWidth > 800) {
+  if (opener && !reduced.matches) {
     const obj = opener.getBoundingClientRect(),
       r = layout.getBoundingClientRect();
     gsap.to(layout, {
       transformOrigin: `${obj.x - r.x + obj.width / 2}px ${obj.y - r.y + obj.height / 2}px`,
-      scale: 1.13,
+      scale: innerWidth > 800 ? 1.13 : 1.035,
       duration: 0.36,
       ease: "power2.out",
     });
@@ -169,10 +178,12 @@ route();
 const pitch = $(".pitch"),
   line = pitch.dataset.pitch || "";
 if (!reduced.matches && !pref("typed") && !location.hash) {
-  pitch.setAttribute("aria-label", line);
+  const transcript = document.createElement("span");
+  transcript.className = "screen-reader-only";
+  transcript.textContent = line;
   const ink = document.createElement("span");
   ink.setAttribute("aria-hidden", "true");
-  pitch.replaceChildren(ink);
+  pitch.replaceChildren(transcript, ink);
   let i = 0;
   const timer = setInterval(() => {
     ink.textContent = line.slice(0, ++i);
