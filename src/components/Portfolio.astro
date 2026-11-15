@@ -110,7 +110,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
                     <div class="render-device category-device">
                       <div class="category-topline"><span class="category-dots" aria-hidden="true">● ● ●</span><span>{category.title}</span><span aria-hidden="true">↗</span></div>
                       {cover ? (
-                        <div class="category-preview"><img src={cover.url} alt="" loading="lazy" decoding="async" /></div>
+                        <div class="category-preview"><img src={asset(cover.url)} alt="" loading="lazy" decoding="async" /></div>
                       ) : (
                         <div class="category-preview category-preview-symbol" aria-hidden="true">
                           <span>{category.visual === "network" ? "↗" : category.visual === "design" || category.visual === "editorial" ? "Aa" : "{ }"}</span>
