@@ -1,0 +1,39 @@
+name: Portfolio quality audit
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Audit production HTML with mobile Lighthouse
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/desk-preview.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4321/ -o /dev/null && break || sleep 1; done
+          npx --yes lighthouse@12.8.2 http://127.0.0.1:4321/ --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=lighthouse.json --quiet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mobile-lighthouse
+          path: lighthouse.json
+      - name: Check all four categories against 90
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const {categories}=JSON.parse(fs.readFileSync('lighthouse.json','utf8'));
+          for(const category of Object.values(categories)){
+            const score=Math.round(category.score*100);
+            console.log(category.title, score);
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `- ${category.title}: ${score}/100\n`);
+            if(score<90) process.exitCode=1;
+          }
+          JS

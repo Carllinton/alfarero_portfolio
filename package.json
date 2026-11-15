@@ -1,0 +1,20 @@
+{
+  "name": "the-desk-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "astro": "5.16.6",
+    "gsap": "3.13.0",
+    "pdf-lib": "1.17.1",
+    "sharp": "0.34.5"
+  }
+}

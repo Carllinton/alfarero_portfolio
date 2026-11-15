@@ -1,0 +1,12 @@
+---
+import Portfolio from "../../components/Portfolio.astro";
+import { profiles } from "../../../portfolio.config";
+export function getStaticPaths() {
+  return Object.entries(profiles).map(([profession, p]) => ({
+    params: { profession },
+    props: { p },
+  }));
+}
+---
+
+<Portfolio p={Astro.props.p} slug={Astro.params.profession} />
