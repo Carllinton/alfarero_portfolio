@@ -83,44 +83,50 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
           <span class="scene-number">04 / SELECTED WORK</span>
         </div>
 
-        {p.projects.map((project, i) => (
-          <section class="project-chapter" aria-labelledby={"project-title-" + i} data-project>
-            <div class="project-sticky">
-              <div class="project-copy">
-                <p class="eyebrow project-label">PROJECT {index(i)} <span class="slash">/</span> {project.role}</p>
-                <h2 id={"project-title-" + i} class="project-headline">{project.outcome}</h2>
-                <p class="project-caption">{project.caption}</p>
-                <div class="project-details">
-                  <p class="project-title-small">{project.title}</p>
-                  <p>{project.result}</p>
-                  {project.links.length > 0 && <div class="project-links">{project.links.map(link => <a href={asset(link.url)} target="_blank" rel="noopener noreferrer">{link.label} <span aria-hidden="true">↗</span></a>)}</div>}
-                </div>
-              </div>
-              <div class="project-stage">
-                {project.media.some(m => m.kind === "image") ? (
-                  <div class="project-image"><img src={asset(project.media.find(m => m.kind === "image")!.url)} alt={project.media.find(m => m.kind === "image")!.alt} loading="lazy" /></div>
-                ) : project.media.some(m => m.kind === "video") ? (
-                  <div class="project-image"><video src={asset(project.media.find(m => m.kind === "video")!.url)} controls playsinline preload="none" aria-label={project.media.find(m => m.kind === "video")!.alt}>Your browser does not support this video.</video></div>
-                ) : (
-                  <div class={"product-render product-" + project.visual.kind + " visual-" + p.heroVisual} aria-label={project.title + " concept visualization"}>
-                    <div class="render-glow" aria-hidden="true"></div>
-                    <div class="render-device">
-                      <div class="render-topline"><span class="render-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>{project.visual.kicker}</span><span class="render-corner">↗</span></div>
-                      <div class="render-body">
-                        <div class="render-heading">{project.visual.title}</div>
-                        <div class="render-bars" aria-hidden="true"><b></b><b></b><b></b></div>
-                        <div class="render-rows">{project.visual.rows.map((row, j) => <div class="render-row"><span class="render-index">{index(j)}</span><span>{row}</span><span aria-hidden="true">↗</span></div>)}</div>
-                      </div>
-                      <div class="render-bottom"><span>{project.visual.tag}</span><span>{index(i)} — {String(p.projects.length).padStart(2, "0")}</span></div>
-                    </div>
+        {p.workCategories.map((category, i) => {
+          const cover = category.visual === "design"
+            ? category.entries[1]?.images[0] || category.entries[0]?.images[0]
+            : category.visual === "network"
+            ? category.entries[0]?.images[0]
+            : category.entries[2]?.images[0] || category.entries[0]?.images[0];
+          const destination = base + "/" + (slug ? slug + "/" : "") + "works/" + encodeURIComponent(category.slug) + "/";
+          return (
+            <section class={"project-chapter category-chapter chapter-" + category.visual} aria-labelledby={"category-title-" + i} data-project>
+              <div class="project-sticky">
+                <div class="project-copy">
+                  <p class="eyebrow project-label">{category.eyebrow}</p>
+                  <h2 id={"category-title-" + i} class="project-headline">{category.statement}</h2>
+                  <p class="project-caption">{category.description}</p>
+                  <div class="category-chapter-footer">
+                    <div class="category-subheading"><span>{category.title}</span><span>{String(category.entries.length).padStart(2,"0")} collections</span></div>
+                    <a class="primary-action category-action" href={destination} aria-label={"Explore all " + category.title + " works"}>
+                      <span>Explore the works</span><span class="action-arrow" aria-hidden="true">↗</span>
+                    </a>
                   </div>
-                )}
-                <span class="visual-caption">{project.media.length ? "PROJECT MEDIA" : "DESIGN REPRESENTATION"} · {project.title.toUpperCase()}</span>
+                </div>
+                <div class="project-stage">
+                  <div class={"category-artwork artwork-" + category.visual}>
+                    <div class="category-orbit" aria-hidden="true"></div>
+                    <div class="render-device category-device">
+                      <div class="category-topline"><span class="category-dots" aria-hidden="true">● ● ●</span><span>{category.title}</span><span aria-hidden="true">↗</span></div>
+                      {cover ? (
+                        <div class="category-preview"><img src={cover.url} alt="" loading="lazy" decoding="async" /></div>
+                      ) : (
+                        <div class="category-preview category-preview-symbol" aria-hidden="true">
+                          <span>{category.visual === "network" ? "↗" : category.visual === "design" || category.visual === "editorial" ? "Aa" : "{ }"}</span>
+                        </div>
+                      )}
+                      <div class="category-preview-footer"><span>{category.entries.length} curated collections</span><span>{String(i + 1).padStart(2,"0")} / {String(p.workCategories.length).padStart(2,"0")}</span></div>
+                    </div>
+                    <div class="category-backplate" aria-hidden="true"></div>
+                  </div>
+                  <span class="visual-caption">{category.title.toUpperCase()} · EXPLORE THE COLLECTION</span>
+                </div>
+                <div class="project-progress" aria-hidden="true"><span></span></div>
               </div>
-              <div class="project-progress" aria-hidden="true"><span></span></div>
-            </div>
-          </section>
-        ))}
+            </section>
+          );
+        })}
 
         <section class="scene scene-numbers" aria-labelledby="numbers-title" data-scene>
           <div class="numbers-inner">
