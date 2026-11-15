@@ -122,8 +122,8 @@ const developer: Profile = {
   ],
   numbers: [
     { value: 3, suffix: "", label: "Selected case studies", detail: "Academic work and practical systems." },
-    { value: 0, suffix: "", label: "Schema changes", detail: "A core requirement of BAR College." },
-    { value: 2, suffix: "", label: "POS lookup methods", detail: "Product search and typed product codes." }
+    { value: 2, suffix: "", label: "POS lookup methods", detail: "Product search and typed product codes." },
+    { value: 2, suffix: "", label: "Planned assessments", detail: "SortIt pre-test and post-test evaluation." }
   ],
   experience: [
     { date: "2026 — present", title: "Web & database projects", detail: "Building academic systems using PHP, JavaScript, React and MySQL, with attention to real workflows." },
