@@ -760,7 +760,7 @@ body:has(dialog[open]) {
     display: none;
   }
 }
-@media (prefers-reduced-motion: reduce) {
+body:not(.full-motion) {
   *,
   *:before,
   *:after {
@@ -852,8 +852,8 @@ body:has(dialog[open]) {
   fill: none; stroke: #fff8e7; stroke-width: 2.8; stroke-linecap: round;
 }
 .steam path { opacity: 0; }
-@media (prefers-reduced-motion: no-preference) {
-  body:not(:has(.quick:target)) .object {
+.full-motion {
+  &:not(:has(.quick:target)) .object {
     animation: place-object .59s cubic-bezier(.19,.78,.24,1.08) backwards;
     animation-delay: calc(var(--order) * 48ms);
   }
@@ -871,10 +871,18 @@ body:has(dialog[open]) {
   .object:active .art { transform: translateY(-2px) rotate(var(--r)) scale(.985); transition-duration: .08s; }
   dialog[open]::backdrop { animation: fade-backdrop .25s ease-out; }
   dialog .case[open] .casebody { animation: unfold .32s ease-out; }
-  body:has(dialog[open]) :is(.window-light,.motes i,.steam path),
-  .still :is(.window-light,.motes i,.steam path) { animation-play-state: paused; }
+  &:has(dialog[open]) :is(.window-light,.motes i,.steam path),
+  &.still :is(.window-light,.motes i,.steam path) { animation-play-state: paused; }
 }
-@media (prefers-reduced-motion: reduce) { #ambient { display: none; } }
+body:not(.full-motion) #ambient, #motion[hidden] { display: none; }
+@media (max-width: 480px) {
+  header { padding-inline: 8px; gap: 4px; }
+  nav { gap: 2px; }
+  .brand .icon { display: none; }
+}
+@media (max-width: 360px) {
+  nav .icon { display: none; }
+}
 @keyframes place-object {
   from { opacity: .45; translate: 0 -14px; rotate: -2deg; }
   to { opacity: 1; translate: 0 0; rotate: 0deg; }

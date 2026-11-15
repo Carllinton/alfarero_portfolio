@@ -7,7 +7,7 @@ const body = document.body,
 const quick = $<HTMLAnchorElement>(".quick-button"),
   lamp = $<HTMLButtonElement>("#light"),
   sound = $<HTMLButtonElement>("#audio");
-const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+const systemMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const pref = (key: string) => {
   try {
     return localStorage.getItem("desk:" + key);
@@ -20,6 +20,24 @@ function save(key: string, val: string) {
     localStorage.setItem("desk:" + key, val);
   } catch {}
 }
+const motion = $<HTMLButtonElement>("#motion");
+let motionPreference = pref("motion");
+let reduceMotion = false;
+function applyMotion() {
+  reduceMotion = motionPreference === "reduced" ||
+    (motionPreference !== "full" && systemMotion.matches);
+  body.classList.toggle("full-motion", !reduceMotion);
+  motion.textContent = reduceMotion ? "Motion off" : "Motion on";
+  motion.setAttribute("aria-pressed", String(!reduceMotion));
+  motion.hidden = false;
+}
+applyMotion();
+systemMotion.addEventListener("change", applyMotion);
+motion.onclick = () => {
+  motionPreference = reduceMotion ? "full" : "reduced";
+  save("motion", motionPreference);
+  applyMotion();
+};
 let enabled = false,
   ctx: AudioContext | undefined,
   opener: HTMLElement | null = null;
@@ -104,7 +122,7 @@ stage.addEventListener("pointerleave", () => {
 });
 let frame = 0;
 stage.addEventListener("pointermove", (e) => {
-  if (e.pointerType !== "mouse" || reduced.matches) return;
+  if (e.pointerType !== "mouse" || reduceMotion) return;
   cancelAnimationFrame(frame);
   frame = requestAnimationFrame(() => {
     const object = (e.target as Element).closest<HTMLElement>(".object");
@@ -126,7 +144,7 @@ function route() {
     isQuick = id === "quick",
     tpl = document.getElementById("tpl-" + id) as HTMLTemplateElement | null;
   gsap.killTweensOf([layout, dialog]);
-  if (dialog.open && !tpl && !reduced.matches) {
+  if (dialog.open && !tpl && !reduceMotion) {
     gsap.to(layout, {
       scale: 1,
       duration: 0.24,
@@ -138,8 +156,8 @@ function route() {
   }
   if (dialog.open && !tpl && !isQuick) {
     gsap.to(dialog, {
-      ...(reduced.matches ? {} : sheetOffset),
-      scale: reduced.matches ? 1 : 0.94, opacity: 0, duration: reduced.matches ? 0.08 : 0.19,
+      ...(reduceMotion ? {} : sheetOffset),
+      scale: reduceMotion ? 1 : 0.94, opacity: 0, duration: reduceMotion ? 0.08 : 0.19,
       ease: "power2.in", onComplete: () => {
         dialog.close();
         opener?.focus({ preventScroll: true });
@@ -171,7 +189,7 @@ function route() {
   const target = $("#sheet-content");
   target.replaceChildren(tpl.content.cloneNode(true));
   sheetOffset = { x: 0, y: 12, rotation: 0 };
-  if (opener && !reduced.matches) {
+  if (opener && !reduceMotion) {
     const obj = opener.getBoundingClientRect(),
       r = layout.getBoundingClientRect();
     sheetOffset = {
@@ -190,8 +208,8 @@ function route() {
   dialog.scrollTop = 0;
   gsap.fromTo(
     dialog,
-    { opacity: 0, ...(reduced.matches ? { x: 0, y: 0, rotation: 0 } : sheetOffset), scale: reduced.matches ? 1 : 0.91 },
-    { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: reduced.matches ? 0.1 : 0.42, ease: "power3.out" },
+    { opacity: 0, ...(reduceMotion ? { x: 0, y: 0, rotation: 0 } : sheetOffset), scale: reduceMotion ? 1 : 0.91 },
+    { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: reduceMotion ? 0.1 : 0.42, ease: "power3.out" },
   );
   $(".back").focus();
 }
@@ -225,7 +243,7 @@ window.addEventListener("hashchange", route);
 route();
 const pitch = $(".pitch"),
   line = pitch.dataset.pitch || "";
-if (!reduced.matches && !pref("typed") && !location.hash) {
+if (!reduceMotion && !pref("typed") && !location.hash) {
   const transcript = document.createElement("span");
   transcript.className = "screen-reader-only";
   transcript.textContent = line;
