@@ -213,3 +213,11 @@ body:has(#summary-contact:target) .site-header .summary-link{display:none}
 @media(prefers-reduced-motion:reduce){
   .scroll-cue,.render-device,.project-copy{opacity:1!important}
 }
+
+/* Configurable visual grammar: same components, different professional language. */
+.scene-intro[data-visual="human"] .intro-title{letter-spacing:-.07em}
+.scene-intro[data-visual="human"] .intro-inner{max-width:1100px}
+.scene-intro[data-visual="editorial"] .intro-title{font-weight:650;letter-spacing:-.09em}
+.visual-human .render-device{background:#edf5f3;border-radius:22px}
+.visual-editorial .render-device{background:#e8ddd2;border-radius:2px}
+.visual-editorial .render-bars b{background:#a05c46}
