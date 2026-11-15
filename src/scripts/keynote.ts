@@ -60,7 +60,7 @@ function prepareHeadline(element: HTMLElement): HTMLElement[] {
   element.setAttribute("aria-label", content);
   const fragment = document.createDocumentFragment();
   const words: HTMLElement[] = [];
-  content.split(/\\s+/).forEach((word, index) => {
+  content.split(/\s+/).forEach((word, index) => {
     if (index) fragment.append(document.createTextNode(" "));
     const outer = document.createElement("span");
     outer.className = "headline-word";
