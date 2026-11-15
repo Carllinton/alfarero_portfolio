@@ -32,6 +32,8 @@ export interface WorkImage {
   url: string;
   alt: string;
   caption: string;
+  /** Original public asset used to produce this optimized local image at build time. */
+  source?: string;
 }
 export interface WorkEntry {
   title: string;
@@ -139,32 +141,38 @@ const developerCategories: WorkCategory[] = [
         "description": "A student client-based flower shop website, including collections, occasions, and ordering views.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172116.png",
+            "url": "works/works/web-development/flories_project/Screenshot-2026-05-24-172116.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172116.png",
             "alt": "Home page",
             "caption": "Home page"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172429.png",
+            "url": "works/works/web-development/flories_project/Screenshot-2026-05-24-172429.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172429.png",
             "alt": "Collections page",
             "caption": "Collections page"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172534.png",
+            "url": "works/works/web-development/flories_project/Screenshot-2026-05-24-172534.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172534.png",
             "alt": "Occasions page",
             "caption": "Occasions page"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172544.png",
+            "url": "works/works/web-development/flories_project/Screenshot-2026-05-24-172544.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172544.png",
             "alt": "Orders interface",
             "caption": "Orders interface"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172600.png",
+            "url": "works/works/web-development/flories_project/Screenshot-2026-05-24-172600.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172600.png",
             "alt": "Contact page",
             "caption": "Contact page"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172610.png",
+            "url": "works/works/web-development/flories_project/Screenshot-2026-05-24-172610.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/flories_project/Screenshot%202026-05-24%20172610.png",
             "alt": "Shopping cart",
             "caption": "Shopping cart"
           }
@@ -176,22 +184,26 @@ const developerCategories: WorkCategory[] = [
         "description": "An interactive web experience dedicated to origami art and its gallery.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221812.png",
+            "url": "works/works/web-development/house_of_origami/Screenshot-2026-04-06-221812.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221812.png",
             "alt": "Landing page",
             "caption": "Landing page"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221906.png",
+            "url": "works/works/web-development/house_of_origami/Screenshot-2026-04-06-221906.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221906.png",
             "alt": "Gallery",
             "caption": "Gallery"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221933.png",
+            "url": "works/works/web-development/house_of_origami/Screenshot-2026-04-06-221933.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221933.png",
             "alt": "Origami detail",
             "caption": "Origami detail"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221947.png",
+            "url": "works/works/web-development/house_of_origami/Screenshot-2026-04-06-221947.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/house_of_origami/Screenshot%202026-04-06%20221947.png",
             "alt": "Interactive section",
             "caption": "Interactive section"
           }
@@ -203,32 +215,38 @@ const developerCategories: WorkCategory[] = [
         "description": "A personal-story website built around different chapters of a life and learning journey.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222813.png",
+            "url": "works/works/web-development/autobiography/Screenshot-2026-04-06-222813.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222813.png",
             "alt": "Introduction",
             "caption": "Introduction"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222828.png",
+            "url": "works/works/web-development/autobiography/Screenshot-2026-04-06-222828.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222828.png",
             "alt": "Early life",
             "caption": "Early life"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222844.png",
+            "url": "works/works/web-development/autobiography/Screenshot-2026-04-06-222844.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222844.png",
             "alt": "Education",
             "caption": "Education"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222856.png",
+            "url": "works/works/web-development/autobiography/Screenshot-2026-04-06-222856.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222856.png",
             "alt": "Career start",
             "caption": "Career start"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222908.png",
+            "url": "works/works/web-development/autobiography/Screenshot-2026-04-06-222908.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222908.png",
             "alt": "Skills development",
             "caption": "Skills development"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222920.png",
+            "url": "works/works/web-development/autobiography/Screenshot-2026-04-06-222920.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/autobiography/Screenshot%202026-04-06%20222920.png",
             "alt": "Future goals",
             "caption": "Future goals"
           }
@@ -240,42 +258,50 @@ const developerCategories: WorkCategory[] = [
         "description": "Screen design, navigation patterns, and responsive interface exploration.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223056.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223056.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223056.png",
             "alt": "App concept",
             "caption": "App concept"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223115.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223115.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223115.png",
             "alt": "Wireframes",
             "caption": "Wireframes"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223130.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223130.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223130.png",
             "alt": "Home screen",
             "caption": "Home screen"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223140.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223140.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223140.png",
             "alt": "Navigation",
             "caption": "Navigation"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223222.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223222.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223222.png",
             "alt": "User profile",
             "caption": "User profile"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223234.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223234.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223234.png",
             "alt": "Interactive elements",
             "caption": "Interactive elements"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223253.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223253.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223253.png",
             "alt": "Color system",
             "caption": "Color system"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223308.png",
+            "url": "works/works/web-development/iphoneui/Screenshot-2026-04-06-223308.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/web%20development/iphoneui/Screenshot%202026-04-06%20223308.png",
             "alt": "Final prototype",
             "caption": "Final prototype"
           }
@@ -304,17 +330,20 @@ const developerCategories: WorkCategory[] = [
         "description": "A coordinated Respresso campaign across outdoor advertising, flyers, and social media.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Respresso_billboard.png",
+            "url": "works/works/multimedia/Respresso_billboard.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Respresso_billboard.png",
             "alt": "Respresso billboard design",
             "caption": "Billboard design"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Respresso_Flyers.png",
+            "url": "works/works/multimedia/Respresso_Flyers.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Respresso_Flyers.png",
             "alt": "Respresso promotional flyer design",
             "caption": "Flyers and print"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Respresso_Social_Media.png",
+            "url": "works/works/multimedia/Respresso_Social_Media.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Respresso_Social_Media.png",
             "alt": "Respresso social media graphic design",
             "caption": "Social media graphics"
           }
@@ -326,17 +355,20 @@ const developerCategories: WorkCategory[] = [
         "description": "Brand identity studies and supporting visual materials for CTT.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/CTT%20logo.png",
+            "url": "works/works/multimedia/CTT-logo.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/CTT%20logo.png",
             "alt": "CTT corporate logo design",
             "caption": "CTT logo"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/image.png",
+            "url": "works/works/multimedia/image.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/image.png",
             "alt": "CTT identity design sheet",
             "caption": "Identity exploration"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/image%20(1).png",
+            "url": "works/works/multimedia/image--1-.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/image%20(1).png",
             "alt": "Additional CTT corporate identity art",
             "caption": "Visual identity application"
           }
@@ -348,17 +380,20 @@ const developerCategories: WorkCategory[] = [
         "description": "Personal identity marks and a multimedia class design project.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/carl_logo.png",
+            "url": "works/works/multimedia/carl_logo.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/carl_logo.png",
             "alt": "Carl personal logo",
             "caption": "Personal wordmark"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/ca_logo.png",
+            "url": "works/works/multimedia/ca_logo.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/ca_logo.png",
             "alt": "CA monogram logo",
             "caption": "CA monogram"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Alfarero_MultiMedia%20PT2.png",
+            "url": "works/works/multimedia/Alfarero_MultiMedia-PT2.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/multimedia/Alfarero_MultiMedia%20PT2.png",
             "alt": "Alfarero multimedia performance task artwork",
             "caption": "Multimedia performance task"
           }
@@ -380,27 +415,32 @@ const developerCategories: WorkCategory[] = [
         "description": "Documented network setup, device configurations, and validation work.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112357.png",
+            "url": "works/works/networking/MISV-network/Screenshot-2026-04-06-112357.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112357.png",
             "alt": "Network overview",
             "caption": "Network overview"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112412.png",
+            "url": "works/works/networking/MISV-network/Screenshot-2026-04-06-112412.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112412.png",
             "alt": "Device configuration",
             "caption": "Device configuration"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112434.png",
+            "url": "works/works/networking/MISV-network/Screenshot-2026-04-06-112434.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112434.png",
             "alt": "Access configuration",
             "caption": "Access configuration"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112454.png",
+            "url": "works/works/networking/MISV-network/Screenshot-2026-04-06-112454.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20112454.png",
             "alt": "Network testing",
             "caption": "Network testing"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20121837.png",
+            "url": "works/works/networking/MISV-network/Screenshot-2026-04-06-121837.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/MISV%20network/Screenshot%202026-04-06%20121837.png",
             "alt": "Final documentation",
             "caption": "Final documentation"
           }
@@ -412,22 +452,26 @@ const developerCategories: WorkCategory[] = [
         "description": "DHCP relay setup, route information, and a recorded network simulation.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/Screenshot%202026-04-06%20214220.png",
+            "url": "works/works/networking/dhcp_relay/Screenshot-2026-04-06-214220.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/Screenshot%202026-04-06%20214220.png",
             "alt": "DHCP relay topology",
             "caption": "DHCP relay topology"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/showiproute.png",
+            "url": "works/works/networking/dhcp_relay/showiproute.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/showiproute.png",
             "alt": "Routing table",
             "caption": "Routing table"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/showiproute1.png",
+            "url": "works/works/networking/dhcp_relay/showiproute1.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/showiproute1.png",
             "alt": "Route details",
             "caption": "Route details"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/showiproute2.png",
+            "url": "works/works/networking/dhcp_relay/showiproute2.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/dhcp_relay/showiproute2.png",
             "alt": "Route verification",
             "caption": "Route verification"
           }
@@ -449,22 +493,26 @@ const developerCategories: WorkCategory[] = [
         "description": "A static routing exercise with routing-table inspection and verification.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/Screenshot%202026-04-06%20214031.png",
+            "url": "works/works/networking/static_routing/Screenshot-2026-04-06-214031.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/Screenshot%202026-04-06%20214031.png",
             "alt": "Routing topology",
             "caption": "Routing topology"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/showiproute.png",
+            "url": "works/works/networking/static_routing/showiproute.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/showiproute.png",
             "alt": "Configured routes",
             "caption": "Configured routes"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/showiproute1.png",
+            "url": "works/works/networking/static_routing/showiproute1.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/showiproute1.png",
             "alt": "Route details",
             "caption": "Route details"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/showiproute2.png",
+            "url": "works/works/networking/static_routing/showiproute2.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/static_routing/showiproute2.png",
             "alt": "Routing verification",
             "caption": "Routing verification"
           }
@@ -482,27 +530,32 @@ const developerCategories: WorkCategory[] = [
         "description": "Network infrastructure illustrated through multiple site-level physical workspace views.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Gen%20T.png",
+            "url": "works/works/networking/Physical/Physical-Workspace/Gen-T.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Gen%20T.png",
             "alt": "Gen T site",
             "caption": "Gen T site"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Malinta.png",
+            "url": "works/works/networking/Physical/Physical-Workspace/Malinta.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Malinta.png",
             "alt": "Malinta site",
             "caption": "Malinta site"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Mapulang%20Lupa.png",
+            "url": "works/works/networking/Physical/Physical-Workspace/Mapulang-Lupa.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Mapulang%20Lupa.png",
             "alt": "Mapulang Lupa site",
             "caption": "Mapulang Lupa site"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Marulas.png",
+            "url": "works/works/networking/Physical/Physical-Workspace/Marulas.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Marulas.png",
             "alt": "Marulas site",
             "caption": "Marulas site"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Ugong.png",
+            "url": "works/works/networking/Physical/Physical-Workspace/Ugong.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/Physical/Physical%20Workspace/Ugong.png",
             "alt": "Ugong site",
             "caption": "Ugong site"
           }
@@ -524,37 +577,44 @@ const developerCategories: WorkCategory[] = [
         "description": "Variable-length subnet planning, address calculations, router configuration, and DHCP pool documentation.",
         "images": [
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Screenshot%202026-04-06%20213944.png",
+            "url": "works/works/networking/VLSM/Screenshot-2026-04-06-213944.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Screenshot%202026-04-06%20213944.png",
             "alt": "Network design overview",
             "caption": "Network design overview"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Computations/Screenshot%202025-11-28%20222858.png",
+            "url": "works/works/networking/VLSM/Computations/Screenshot-2025-11-28-222858.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Computations/Screenshot%202025-11-28%20222858.png",
             "alt": "Subnet calculations A",
             "caption": "Subnet calculations A"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Computations/Screenshot%202025-11-28%20222907.png",
+            "url": "works/works/networking/VLSM/Computations/Screenshot-2025-11-28-222907.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Computations/Screenshot%202025-11-28%20222907.png",
             "alt": "Subnet calculations B",
             "caption": "Subnet calculations B"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Computations/Screenshot%202025-11-28%20222913.png",
+            "url": "works/works/networking/VLSM/Computations/Screenshot-2025-11-28-222913.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/Computations/Screenshot%202025-11-28%20222913.png",
             "alt": "Subnet calculations C",
             "caption": "Subnet calculations C"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/DHCP%20pools/Main%20Router.png",
+            "url": "works/works/networking/VLSM/DHCP-pools/Main-Router.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/DHCP%20pools/Main%20Router.png",
             "alt": "Main router DHCP pool",
             "caption": "Main router DHCP pool"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/DHCP%20pools/Annex%20Router.png",
+            "url": "works/works/networking/VLSM/DHCP-pools/Annex-Router.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/DHCP%20pools/Annex%20Router.png",
             "alt": "Annex router DHCP pool",
             "caption": "Annex router DHCP pool"
           },
           {
-            "url": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/DHCP%20pools/CPAG%20Router.png",
+            "url": "works/works/networking/VLSM/DHCP-pools/CPAG-Router.webp",
+          "source": "https://raw.githubusercontent.com/Carllinton/Portfolio/main/works/networking/VLSM/DHCP%20pools/CPAG%20Router.png",
             "alt": "CPAG router DHCP pool",
             "caption": "CPAG router DHCP pool"
           }
