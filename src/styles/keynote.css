@@ -221,3 +221,5 @@ body:has(#summary-contact:target) .site-header .summary-link{display:none}
 .visual-human .render-device{background:#edf5f3;border-radius:22px}
 .visual-editorial .render-device{background:#e8ddd2;border-radius:2px}
 .visual-editorial .render-bars b{background:#a05c46}
+
+.project-image video{display:block;width:100%;max-height:65vh;background:#101112;object-fit:contain}
