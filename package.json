@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev --host 0.0.0.0",
-    "build": "astro build",
+    "dev": "node scripts/prepare-works.mjs && astro dev --host 0.0.0.0",
+    "build": "node scripts/prepare-works.mjs && astro build",
     "preview": "astro preview"
   },
   "engines": {
