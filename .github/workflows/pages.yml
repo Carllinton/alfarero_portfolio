@@ -9,7 +9,7 @@ permissions:
   id-token: write
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,6 +28,16 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      - name: Verify the new keynote homepage was built
+        run: |
+          test -f dist/index.html
+          grep -Fq "AN INTRODUCTION, NOT A RESUME" dist/index.html
+          grep -Fq "Skip to summary" dist/index.html
+          if grep -Fq "pick an object" dist/index.html; then
+            echo "::error::Old desk homepage detected in the deployment artifact."
+            exit 1
+          fi
+          echo "New keynote homepage and recruiter summary verified."
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
