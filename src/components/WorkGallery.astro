@@ -12,6 +12,8 @@ const totalImages = category.entries.reduce((count, entry) => count + entry.imag
 const asset = (url: string) => /^(https?:|mailto:|#)/.test(url) ? url : base + "/" + url.replace(/^\//, "");
 const imgContent = category.entries.flatMap(entry => entry.images.map(img => ({ ...img, project: entry.title })));
 const cover = imgContent[0]?.url;
+const pageTitle = `${category.title} — ${p.firstName} Portfolio`;
+const pageDescription = category.description;
 ---
 <!doctype html>
 <html lang="en" data-theme="dark" style={`--accent:${accent}`}>
@@ -27,7 +29,7 @@ const cover = imgContent[0]?.url;
     {cover && <meta property="og:image" content={asset(cover)} />}
     <link rel="canonical" href={canonical.toString()} />
     <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />
-    <title>{category.title} — {p.firstName}'s Work</title>
+    <title>{pageTitle}</title>
   </head>
   <body class="gallery-page">
     <a class="a11y-skip" href="#gallery-content">Skip to works</a>
