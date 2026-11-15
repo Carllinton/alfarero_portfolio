@@ -7,6 +7,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const asset = (url: string) => /^(https?:|mailto:|#)/.test(url) ? url : base + "/" + url.replace(/^\//, "");
 const resume = base + "/" + (slug ? slug + "/" : "") + "resume.pdf";
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const preview = new URL(base + "/" + (slug ? slug + "/" : "") + "og.png", Astro.site);
 const isContactable = Boolean(p.contact.email || p.contact.endpoint);
 const safeAccent = /^#[0-9a-fA-F]{6}$/.test(p.accent) ? p.accent : "#9BE9BB";
 const index = (n: number) => String(n + 1).padStart(2, "0");
@@ -23,7 +24,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
     <meta property="og:title" content={p.name + " — Portfolio"} />
     <meta property="og:description" content={p.positioning} />
     <meta property="og:url" content={canonical.toString()} />
-    <meta property="og:image" content={new URL(base + "/art/preview-terminal.png", Astro.site).toString()} />
+    <meta property="og:image" content={preview.toString()} />
     <link rel="canonical" href={canonical.toString()} />
     <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />
     <title>{p.name} — Made with purpose.</title>
@@ -43,7 +44,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
     </header>
     <main id="top">
       <div class="story" id="story-start">
-        <section class="scene scene-intro" aria-labelledby="intro-title" data-scene>
+        <section class="scene scene-intro" data-visual={p.heroVisual} aria-labelledby="intro-title" data-scene>
           <div class="intro-inner">
             <span class="eyebrow reveal">AN INTRODUCTION, NOT A RESUME</span>
             <h1 id="intro-title" class="intro-title"><span class="hello reveal">Hello.</span><span class="name-reveal" aria-label={p.name}><span class="name-ink">{p.name}</span></span></h1>
@@ -97,7 +98,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
                 {project.media.some(m => m.kind === "image") ? (
                   <div class="project-image"><img src={asset(project.media.find(m => m.kind === "image")!.url)} alt={project.media.find(m => m.kind === "image")!.alt} loading="lazy" /></div>
                 ) : (
-                  <div class={"product-render product-" + project.visual.kind} aria-label={project.title + " concept visualization"}>
+                  <div class={"product-render product-" + project.visual.kind + " visual-" + p.heroVisual} aria-label={project.title + " concept visualization"}>
                     <div class="render-glow" aria-hidden="true"></div>
                     <div class="render-device">
                       <div class="render-topline"><span class="render-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>{project.visual.kicker}</span><span class="render-corner">↗</span></div>
