@@ -24,6 +24,19 @@ for (const [profession, profile] of Object.entries(profiles)) {
     if (!html.includes("gallery-overview-grid") || !html.includes("gallery-overview-card")) {
       throw new Error("Missing project previews on " + page);
     }
+    // Detect Astro HTML serialization regressions that used to strip the
+    // <body> tag and leak "'s Work" outside the document head.
+    if (!html.includes('<body class="gallery-page">') || !html.includes('</body>')) {
+      throw new Error("Malformed gallery document: missing body tag in " + page);
+    }
+    const navClose = html.indexOf("</nav>");
+    const previewStart = html.indexOf('<section class="gallery-overview"');
+    if (navClose < 0 || previewStart < 0 || navClose >= previewStart) {
+      throw new Error("Gallery navigation is wrapping projects: " + page);
+    }
+    if (html.includes("</head>'s Work")) {
+      throw new Error("Page-title text escaped into body markup: " + page);
+    }
     checkedGalleries++;
     for (const entry of category.entries) {
       for (const image of entry.images) {
