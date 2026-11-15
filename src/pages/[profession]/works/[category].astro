@@ -1,0 +1,14 @@
+---
+import WorkGallery from "../../../components/WorkGallery.astro";
+import { profiles } from "../../../../portfolio.config";
+export function getStaticPaths() {
+  return Object.entries(profiles).flatMap(([profession, p]) =>
+    p.workCategories.map(category => ({
+      params: { profession, category: category.slug },
+      props: { p, category },
+    }))
+  );
+}
+const { p, category } = Astro.props;
+---
+<WorkGallery p={p} category={category} slug={Astro.params.profession} />
