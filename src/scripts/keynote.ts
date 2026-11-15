@@ -6,7 +6,8 @@ const $ = <T extends Element = HTMLElement>(selector: string) => document.queryS
 const $$ = <T extends Element = HTMLElement>(selector: string) => Array.from(document.querySelectorAll<T>(selector));
 const root = document.documentElement;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-const isReduced = () => reduce.matches;
+let motionPreference: "on" | "off" | null = null;
+const isReduced = () => motionPreference === "off" || (motionPreference !== "on" && reduce.matches);
 const ease = "power3.out";
 
 function preference(key: string): string | null {
@@ -35,6 +36,28 @@ $<HTMLButtonElement>(".theme-button")?.addEventListener("click", () => {
   setTheme(next);
   save("theme", next);
 });
+function updateMotionControl() {
+  const active = !isReduced();
+  root.dataset.motion = active ? "on" : "off";
+  const toggle = $<HTMLButtonElement>(".motion-button");
+  if (toggle) {
+    toggle.setAttribute("aria-pressed", String(active));
+    toggle.setAttribute("aria-label", active ? "Turn animations off" : "Turn animations on");
+    toggle.title = active ? "Turn animations off" : "Turn animations on";
+    const word = toggle.querySelector<HTMLElement>(".motion-word");
+    if (word) word.textContent = active ? "Motion on" : "Motion off";
+  }
+}
+const savedMotion = preference("motion");
+motionPreference = savedMotion === "on" || savedMotion === "off" ? savedMotion : null;
+updateMotionControl();
+$<HTMLButtonElement>(".motion-button")?.addEventListener("click", () => {
+  motionPreference = isReduced() ? "on" : "off";
+  save("motion", motionPreference);
+  updateMotionControl();
+  createAnimations();
+});
+
 
 function syncView() {
   const hash = location.hash;
@@ -119,6 +142,22 @@ function createAnimations() {
         { opacity: 1, y: 0, duration: .85 }, "-=.24")
       .fromTo(".scroll-cue", { opacity: 0, y: 8 },
         { opacity: 1, y: 0, duration: .65 }, "-=.12");
+
+    // Unlike the initial reveal, this movement is continuously tied to scroll.
+    // It makes the entire introduction recede as the next idea takes focus.
+    const introScene = $<HTMLElement>(".scene-intro");
+    const introContent = $<HTMLElement>(".intro-inner");
+    if (introScene && introContent) {
+      gsap.fromTo(introContent,
+        { scale: 1, y: 0 },
+        { scale: .84, y: -65, ease: "none",
+          scrollTrigger: {
+            trigger: introScene, start: "top top", end: "bottom top",
+            scrub: .55, invalidateOnRefresh: true,
+          },
+        });
+    }
+
 
     wordsByHeadline.forEach(({ element, words }) => {
       if (!words.length) return;
@@ -253,4 +292,7 @@ document.addEventListener("submit", async event => {
   } finally { button.disabled = false; }
 });
 
-reduce.addEventListener("change", createAnimations);
+reduce.addEventListener("change", () => {
+  updateMotionControl();
+  createAnimations();
+});
