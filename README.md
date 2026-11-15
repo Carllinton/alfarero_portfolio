@@ -1,92 +1,70 @@
-# The Desk
+# Keynote — a portfolio presented like a product launch
 
-A static, top-down portfolio of seven illustrated objects. Open a case file on the desk, use the résumé in Quick View, or explore a sample profession. Astro renders the complete content at build time. GSAP adds the camera movement. Every illustration, texture and sound is local or synthesized.
+An Astro/TypeScript portfolio built around one principle: make each screen mean something. The experience moves from an introduction through conviction, selected work, measurable scope, craft, a personal reveal, and an invitation.
 
-## Run on your computer
+**The content lives in one file:** `portfolio.config.ts`.
 
-Install Node.js 22.13 or newer. Open a terminal in the folder containing package.json.
+## Use it
 
-```sh
+Requires Node.js 22.13 or newer.
+
+```bash
 npm ci
 npm run dev
-```
-
-Open the local address printed by Astro. To run the production version, use `npm run build` followed by `npm run preview`.
-
-## Edit one file
-
-Open **portfolio.config.ts** at the project root. Change `activeProfession` to `developer`, `healthcare`, or `designer` and rebuild. The root page, résumé and sharing preview follow the selected profile. The sample routes remain available at `/developer/`, `/healthcare/` and `/designer/`. Append `#quick` for a direct recruiter link. The healthcare and designer profiles are fictional. Carl’s developer profile uses student projects, with proposed research clearly identified.
-
-| Config field | What changes |
-| --- | --- |
-| name, firstName, headline, pitch, location | Identity, introduction, typewritten line and location |
-| summary, story, hobbies | Biography and personal content |
-| theme.surface, theme.props, accent | Desk material, decorative tools, controls, typography accents and day lighting |
-| theme.name, theme.mark | Theme description and unique social-image filename |
-| objects | Section label, accessible description, artwork, action and placement |
-| projects | Case files, summaries, media, links and measurable outcomes. Quick View takes the first three. |
-| experience, credentials, skills | Shared details in both views and the generated résumé |
-| contact | Primary email, Formspree endpoint, professional links |
-| secret | Hidden keepsake, accessible name and personal note |
-
-To add a profession, duplicate a profile, give it a unique theme mark, and add it to `profiles`. Pick existing artwork by its filename stem from `public/art/`. For example, a healthcare profile can reuse the clipboard, chart folders and stethoscope. To add new artwork, place a lightweight SVG with a viewBox in that folder. Object coordinates are percentages from the left and top. Width is a percentage of scene width, and angle is in degrees. Keep IDs unique and reserve desk, quick and note for navigation. Mobile follows the order of the objects array.
-
-A project can reference local media such as `{kind:'image',url:'art/my-prototype.webp',alt:'Checkout prototype showing the cart'}` or an embeddable YouTube/Vimeo URL with a descriptive title. Place new local media in public. External project links use label and url. Keep large video files outside the repository. A metric may be a measured result or a clearly identified scope count. Keep planned outcomes distinct from observed results.
-
-## Contact
-
-The developer profile posts to Carl’s supplied Formspree endpoint. A successful response clears the form. A failed request leaves the message intact. Set `contact.email` to a public address to enable the direct mailto fallback, including a prefilled draft after an unsuccessful submission. With only an email configured, the form opens the visitor’s email app. Both fields are empty in the fictional samples. Formspree recipient verification and delivery settings belong to the form owner. Test delivery from the published domain.
-
-## GitHub Pages
-
-The deployment workflow is configured for **Carllinton/alfarero_portfolio** and also works under other repository names. It obtains the origin and base path from GitHub Pages at build time. The expected project path is **/alfarero_portfolio/**. All image, script, stylesheet, résumé, canonical and social-image URLs include the configured base.
-
-1. Put the source files at the root of your repository on main, including the hidden .github directory.
-2. Open **Settings → Pages → Build and deployment** and select **GitHub Actions**.
-3. Push to main or run **Deploy The Desk to GitHub Pages** manually from Actions.
-4. Open the deployment URL in the github-pages environment after both jobs succeed.
-
-For a repository named **Portfolio**, the base path is case-sensitive. The workflow detects it automatically. To test that deployment locally in PowerShell:
-
-```powershell
-$env:SITE_URL = "https://Carllinton.github.io"
-$env:BASE_PATH = "/Portfolio"
 npm run build
 npm run preview
 ```
 
-Visit the local preview address with `/Portfolio/` appended. On macOS/Linux, set the same values using `export SITE_URL=https://Carllinton.github.io` and `export BASE_PATH=/Portfolio`. Use `/` for an account site or root custom domain. The output directory is dist. It can also be served by a static web host.
+## Customize your portfolio
 
-## Project structure
+In `portfolio.config.ts`, choose `activeProfession`:
+- `developer` — Carl's IT and web development portfolio.
+- `healthcare` — a fictional healthcare professional.
+- `designer` — a fictional editorial designer.
+
+The same file controls name, positioning, problem statement, projects, outcomes, metrics, media, experience, credentials, skills, testimonials, hero visual, palette accent, personal reveal, and contact options. The layout adapts without changing components. All samples are clearly labeled and should not be presented as real-world client outcomes.
+
+**Project evidence:** The default developer profile uses actual student-project scope. It does not claim percentage improvements without measurement. Add verified project screenshots to `projects[].media` (with `kind: "image"`, `url`, and `alt`). Until then, the site uses intentional, responsive interface mockups, explicitly labeled as representations.
+
+**Testimonials:** Empty by default. The testimonial stage appears only if you add authentic quotes to `testimonials`. There are no invented endorsements.
+
+**Summary mode:** Choose **Skip to summary**, or open `/#summary` (after the GitHub Pages repository prefix). This gives hiring managers the same facts in a scannable view: an intro, top three case studies, experience, skills, credentials, résumé PDF, and contact. It works without JavaScript through `:target` CSS. **Experience the story** returns to the keynote.
+
+**Contact:** The developer portfolio is already connected to `https://formspree.io/f/xyezrrre`. Test a message on the published domain to confirm Formspree's recipient verification. Setting a public email also makes a direct mailto action available. Without an endpoint or email, the site shows no inert send button.
+
+**Accessibility:** Native landmarks, keyboard-visible focus, semantic links and buttons, CSS-only summary fallback, color theme preference, motion reduction, image alt text, and progressive enhancement are built in. ScrollTrigger effects are disabled for users requesting reduced motion. Animated values use transforms and opacity for the scene; counters update readable text once activated.
+
+## Files
 
 ```text
-portfolio.config.ts                 Profiles, artwork selection and content
-astro.config.mjs                    Static output, site origin and base path
-src/components/Portfolio.astro      Scene, quick view, modal and metadata
-src/components/Content.astro        Shared sections, case files and contact form
-src/components/Icon.astro           Small inline UI icons
-src/scripts/desk.ts                 Navigation, lighting, sound and form handling
-src/styles/desk.css                 Layout, materials, responsive and focus states
-src/lib/resume.ts                   Build-time PDF generation
-src/pages/                          Root page, sample routes, PDFs and OG images
-public/art/                         Desk illustrations and optimized wood texture
-.github/workflows/pages.yml         GitHub Pages deployment
-.github/workflows/audit.yml         Mobile Lighthouse report and 90-point thresholds
+portfolio.config.ts               Single source of content; 3 profession profiles
+src/components/Portfolio.astro    Complete keynote + recruiter summary
+src/styles/keynote.css            Design system, themes, mobile, reduced motion
+src/scripts/keynote.ts            GSAP ScrollTrigger, views, contact form
+src/lib/resume.ts                 PDF builder driven by the same configuration
+src/pages/index.astro             Active profile
+src/pages/[profession]/           Demo profile routes and their résumés
+.github/workflows/pages.yml       Static GitHub Pages deployment
+.github/workflows/audit.yml       Lighthouse mobile quality audit
 ```
 
-## Verify the experience
+The previous desk-themed files/assets may remain in the repository for history, but the active site uses the keynote styles and script.
 
-- Navigate with Tab. Enter opens an object. Escape or Back to desk returns focus to it.
-- Open Projects and expand a case. The same information appears under Quick View.
-- Open each sample route and download its résumé. PDFs are generated from the selected profile during the build.
-- On a narrow screen, swipe vertically between objects. Lighting persists locally, while sound starts off on each load. Reduced motion disables the typing effect, hover motion and camera scaling.
-- Disable JavaScript to see the linear portfolio with native disclosure controls, the PDF and the regular form submission.
-- The **Portfolio quality audit** workflow tests the production build with mobile Lighthouse and saves the JSON report under Actions artifacts. Scores can vary with browser and network conditions.
+## Deploy to GitHub Pages
 
-## Five ways to extend it
+In repository settings, choose **Pages → Build and deployment → GitHub Actions**. The workflow runs on pushes to `main`, builds the static site with the correct origin and repository base path, and publishes `dist`.
 
-1. Add annotated before-and-after screenshots to the Meljune POS case file.
-2. Introduce a Filipino translation of the desk and Quick View.
-3. Add a teaching desk with lesson plans, a chalkboard and classroom resources.
-4. Turn the experience ruler into a year-by-year timeline with project milestones.
-5. Add a short, captioned project walkthrough inside a case file.
+Expected live URL: `https://carllinton.github.io/alfarero_portfolio/`.
+
+Deployment and Lighthouse checks should both be green in **Actions** before publishing the URL to employers. Refresh the published URL with `Ctrl+Shift+R` after deployment.
+
+## Quality checklist
+
+1. Test home and `/#summary` on desktop and phone.
+2. Tab through controls. Confirm summary mode and return navigation work.
+3. Inspect the three profession previews and their résumé links.
+4. Turn on reduced motion and check that content remains readable.
+5. Toggle light/dark mode, reload, and confirm the selection persists.
+6. Send a test Formspree message from the published site.
+7. Replace visual mockups with real screenshots when available.
+8. Add authentic testimonials only after receiving permission.
