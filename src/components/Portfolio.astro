@@ -97,6 +97,8 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
               <div class="project-stage">
                 {project.media.some(m => m.kind === "image") ? (
                   <div class="project-image"><img src={asset(project.media.find(m => m.kind === "image")!.url)} alt={project.media.find(m => m.kind === "image")!.alt} loading="lazy" /></div>
+                ) : project.media.some(m => m.kind === "video") ? (
+                  <div class="project-image"><video src={asset(project.media.find(m => m.kind === "video")!.url)} controls playsinline preload="none" aria-label={project.media.find(m => m.kind === "video")!.alt}>Your browser does not support this video.</video></div>
                 ) : (
                   <div class={"product-render product-" + project.visual.kind + " visual-" + p.heroVisual} aria-label={project.title + " concept visualization"}>
                     <div class="render-glow" aria-hidden="true"></div>
@@ -111,7 +113,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
                     </div>
                   </div>
                 )}
-                <span class="visual-caption">DESIGN REPRESENTATION · {project.title.toUpperCase()}</span>
+                <span class="visual-caption">{project.media.length ? "PROJECT MEDIA" : "DESIGN REPRESENTATION"} · {project.title.toUpperCase()}</span>
               </div>
               <div class="project-progress" aria-hidden="true"><span></span></div>
             </div>
