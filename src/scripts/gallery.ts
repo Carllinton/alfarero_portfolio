@@ -1,6 +1,4 @@
 // Gallery page enhancement. All image links still open originals without JS.
-import gsap from "gsap";
-
 const $ = <T extends Element = HTMLElement>(selector: string) => document.querySelector<T>(selector);
 const $$ = <T extends Element = HTMLElement>(selector: string) => Array.from(document.querySelectorAll<T>(selector));
 const root = document.documentElement;
@@ -35,23 +33,8 @@ const motion = store("motion");
 const animate = motion === "on" || (motion !== "off" && !reduce.matches);
 root.dataset.motion = animate ? "on" : "off";
 
-if (animate) {
-  gsap.fromTo(".gallery-hero-inner > *",
-    { opacity: 0, y: 28 },
-    { opacity: 1, y: 0, stagger: .10, duration: .9, ease: "power3.out", delay: .06 }
-  );
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const element = entry.target as HTMLElement;
-      observer.unobserve(element);
-      gsap.fromTo(element, { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: .72, ease: "power3.out" });
-    });
-  }, { threshold: .06 });
-  $$(".gallery-collection-head,.art-tile,.gallery-case-panel").forEach(el => observer.observe(el));
-}
-
+// Galleries prioritize immediate, dependable content rendering. The main
+// keynote retains its GSAP motion; thumbnails need no entrance animation.
 const dialog = $<HTMLDialogElement>(".gallery-lightbox");
 const image = $<HTMLImageElement>(".lightbox-image");
 const caption = $<HTMLElement>(".lightbox-caption strong");
