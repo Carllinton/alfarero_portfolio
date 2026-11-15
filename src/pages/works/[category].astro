@@ -1,0 +1,12 @@
+---
+import WorkGallery from "../../components/WorkGallery.astro";
+import profile from "../../../portfolio.config";
+export function getStaticPaths() {
+  return profile.workCategories.map(category => ({
+    params: { category: category.slug },
+    props: { category },
+  }));
+}
+const { category } = Astro.props;
+---
+<WorkGallery p={profile} category={category} />
