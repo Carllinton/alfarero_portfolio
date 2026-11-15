@@ -32,6 +32,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
   <body>
     <a class="a11y-skip" href="#story-start">Skip introduction</a>
     <header class="site-header">
+      <span class="reading-progress" aria-hidden="true"></span>
       <a class="identity" href="#top" aria-label={"Back to the beginning — " + p.name}>
         <span class="identity-mark" aria-hidden="true"><span></span><span></span><span></span></span>
         <span>{p.firstName}<span class="identity-period">.</span></span>
