@@ -197,10 +197,11 @@ html[data-theme=light] .product-render .render-glow{border-color:rgba(0,0,0,.2)}
  .project-headline{font-size:clamp(2.8rem,4.4vw,5rem)}.product-render{max-height:65vh}
 }
 @media(prefers-reduced-motion:reduce){
- html{scroll-behavior:auto!important}
- *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
- .project-chapter{height:auto!important;min-height:100svh}.project-sticky{position:relative;height:auto;min-height:100svh}
- .name-ink{transform:none!important}
+ html:not([data-motion="on"]){scroll-behavior:auto!important}
+ html:not([data-motion="on"]) *,html:not([data-motion="on"]) *::before,html:not([data-motion="on"]) *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ html:not([data-motion="on"]) .project-chapter{height:auto!important;min-height:100svh}
+ html:not([data-motion="on"]) .project-sticky{position:relative;height:auto;min-height:100svh}
+ html:not([data-motion="on"]) .name-ink{transform:none!important}
 }
 
 /* CSS-only recruiter escape hatch when JavaScript is unavailable. */
@@ -211,7 +212,7 @@ body:has(#summary-contact:target) .recruiter-view{display:block}
 body:has(#summary:target) .site-header .summary-link,
 body:has(#summary-contact:target) .site-header .summary-link{display:none}
 @media(prefers-reduced-motion:reduce){
-  .scroll-cue,.render-device,.project-copy{opacity:1!important}
+ html:not([data-motion="on"]) :is(.scroll-cue,.render-device,.project-copy){opacity:1!important}
 }
 
 /* Configurable visual grammar: same components, different professional language. */
@@ -335,14 +336,26 @@ body:has(#summary-contact:target) .site-header .summary-link{display:none}
 
 /* Reduced motion: skip the choreography and keep every message visible. */
 @media(prefers-reduced-motion:reduce){
-  .headline-word .word-ink{transform:none!important;opacity:1!important;will-change:auto}
-  .story .eyebrow::after,
-  .scene-surprise .surprise-detail::before{transform:scaleX(1)!important}
-  .render-glow,.render-row,.render-bars b{opacity:1!important;animation:none!important}
-  .reading-progress{display:none}
+  html:not([data-motion="on"]) .headline-word .word-ink{transform:none!important;opacity:1!important;will-change:auto}
+  html:not([data-motion="on"]) .story .eyebrow::after,
+  html:not([data-motion="on"]) .scene-surprise .surprise-detail::before{transform:scaleX(1)!important}
+  html:not([data-motion="on"]) :is(.render-glow,.render-row,.render-bars b){opacity:1!important;animation:none!important}
+  html:not([data-motion="on"]) .reading-progress{display:none}
 }
 
 /* Keep the fast recruiter view free from narrative progress UI. */
 body.summary-mode .reading-progress,
 body:has(#summary:target) .reading-progress,
 body:has(#summary-contact:target) .reading-progress{display:none}
+
+/* Explicit motion choice can override the operating system setting when requested. */
+.motion-button{border:1px solid var(--line);border-radius:100px;background:transparent;color:var(--muted);padding:9px 12px;display:inline-flex;gap:8px;align-items:center;white-space:nowrap;font-size:11px;font-weight:600;transition:color .3s var(--ease),border-color .3s var(--ease)}
+.motion-button:hover{color:var(--fg);border-color:var(--accent)}
+.motion-dot{width:7px;height:7px;flex:none;border-radius:50%;border:1px solid currentColor}
+.motion-button[aria-pressed="true"]{color:var(--fg)}
+.motion-button[aria-pressed="true"] .motion-dot{border-color:var(--accent);background:var(--accent)}
+html[data-motion="off"] .reading-progress{display:none}
+html[data-motion="off"] .project-chapter{height:auto!important;min-height:100svh}
+html[data-motion="off"] .project-sticky{position:relative;height:auto;min-height:100svh}
+html[data-motion="off"] .motion-ready .word-ink{transform:none!important;opacity:1!important}
+@media(max-width:650px){.motion-button{padding:9px}.motion-word{font-size:10px}.header-end{gap:7px}.summary-link{padding:9px 10px}}
