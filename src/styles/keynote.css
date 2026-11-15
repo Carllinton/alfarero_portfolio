@@ -279,7 +279,7 @@ body:has(#summary-contact:target) .site-header .summary-link{display:none}
 
 /* Masked words are generated progressively, but original HTML is complete. */
 .headline-word{display:inline-block;overflow:hidden;vertical-align:top;padding:.06em 0 .09em;margin:-.06em 0 -.09em}
-.headline-word .word-ink{display:inline-block;will-change:transform}
+.headline-word .word-ink{display:inline-block}
 .scene .scene-number{pointer-events:none}
 .motion-ready .scene.is-current .scene-number{
   animation:keynote-chapter-mark .8s var(--ease) both;
@@ -341,3 +341,8 @@ body:has(#summary-contact:target) .site-header .summary-link{display:none}
   .render-glow,.render-row,.render-bars b{opacity:1!important;animation:none!important}
   .reading-progress{display:none}
 }
+
+/* Keep the fast recruiter view free from narrative progress UI. */
+body.summary-mode .reading-progress,
+body:has(#summary:target) .reading-progress,
+body:has(#summary-contact:target) .reading-progress{display:none}
