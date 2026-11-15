@@ -1,236 +1,224 @@
 ---
-import { readFileSync } from "node:fs";
-import Content from "./Content.astro";
-import Icon from "./Icon.astro";
-import type { Profile } from "../../portfolio.config";
-import "../styles/desk.css";
+import type { Profile, Project } from "../../portfolio.config";
+import "../styles/keynote.css";
+
 const { p, slug = "" } = Astro.props as { p: Profile; slug?: string };
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const art = (s: string) => base + "/art/" + s + ".svg";
-function dimensions(id: string) {
-  const svg = readFileSync("public/art/" + id + ".svg", "utf8");
-  const match = svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
-  return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
-}
+const asset = (url: string) => /^(https?:|mailto:|#)/.test(url) ? url : base + "/" + url.replace(/^\//, "");
 const resume = base + "/" + (slug ? slug + "/" : "") + "resume.pdf";
-const og = new URL(base + "/art/preview-" + p.theme.mark + ".png", Astro.site);
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const groups = [
-  "about",
-  "projects",
-  "experience",
-  "skills",
-  "credentials",
-  "personal",
-  "contact",
-] as const;
+const isContactable = Boolean(p.contact.email || p.contact.endpoint);
+const safeAccent = /^#[0-9a-fA-F]{6}$/.test(p.accent) ? p.accent : "#9BE9BB";
+const index = (n: number) => String(n + 1).padStart(2, "0");
 ---
-
 <!doctype html>
-<html
-  lang="en"
-  style={`--accent:${p.accent};--wood:${p.theme.surface};--grain:url("${base}/art/wood.webp")`}
->
+<html lang="en" data-theme="dark" style={`--accent:${safeAccent}`}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>The Desk — {p.name}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101112" />
+    <meta name="color-scheme" content="dark light" />
     <meta name="description" content={p.summary} />
-    <meta property="og:title" content={"The Desk — " + p.name} />
-    <meta property="og:description" content={p.pitch} />
-    <meta property="og:image" content={og} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href={canonical} />
-    <link rel="icon" href={base + "/art/favicon.svg"} />
+    <meta property="og:title" content={p.name + " — Portfolio"} />
+    <meta property="og:description" content={p.positioning} />
+    <meta property="og:url" content={canonical.toString()} />
+    <meta property="og:image" content={new URL(base + "/art/preview-terminal.png", Astro.site).toString()} />
+    <link rel="canonical" href={canonical.toString()} />
+    <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />
+    <title>{p.name} — Made with purpose.</title>
   </head>
   <body>
-    <a href="#quick" class="skip">
-      Skip to Quick View
-    </a>
-    <header>
-      <div class="brand">
-        <Icon name="lamp" />
-        <span>The Desk</span>
+    <a class="a11y-skip" href="#story-start">Skip introduction</a>
+    <header class="site-header">
+      <a class="identity" href="#top" aria-label={"Back to the beginning — " + p.name}>
+        <span class="identity-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>{p.firstName}<span class="identity-period">.</span></span>
+      </a>
+      <div class="header-end">
+        <span class="header-status">{p.sample ? "Illustrative portfolio" : "Available for opportunities"}</span>
+        <button class="theme-button" type="button" aria-label="Switch to light theme" aria-pressed="false"><span aria-hidden="true" class="theme-glyph">◐</span><span class="theme-word">Light</span></button>
+        <a class="summary-link" href="#summary">Skip to summary <span aria-hidden="true">↗</span></a>
       </div>
-      <span class="headerline"></span>
-      <span class="brand-sub">Personal portfolio</span>
-      <nav aria-label="Desk controls">
-        <button id="light" aria-pressed="false">
-          <Icon name="sun" />
-          <span>Day</span>
-        </button>
-        <button id="motion" type="button" aria-pressed="false" hidden>
-          <span>Motion off</span>
-        </button>
-        <button id="audio" aria-pressed="false">
-          <Icon name="volume" />
-          <span>Sound off</span>
-        </button>
-        <a class="quick-button" href="#quick">
-          <Icon name="list" />
-          <span>Quick View</span>
-        </a>
-      </nav>
     </header>
-    <main id="workspace">
-      <div class="stage" id="stage">
-        <div class="window-light" aria-hidden="true"></div>
-        <div class="motes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <div class="spot"></div>
-        <div class="layout">
-          <div class="intro">
-            <div class="kicker">
-              <i></i>
-              {p.sample ? "Sample portfolio" : "Interactive portfolio"}
-            </div>
-            <h1>
-              The Desk<span>.</span>
-            </h1>
-            <p class="byline">of {p.name}</p>
-            <p class="pitch" data-pitch={p.pitch}>
-              {p.pitch}
-            </p>
-            <div class="role">{p.headline}</div>
+    <main id="top">
+      <div class="story" id="story-start">
+        <section class="scene scene-intro" aria-labelledby="intro-title" data-scene>
+          <div class="intro-inner">
+            <span class="eyebrow reveal">AN INTRODUCTION, NOT A RESUME</span>
+            <h1 id="intro-title" class="intro-title"><span class="hello reveal">Hello.</span><span class="name-reveal" aria-label={p.name}><span class="name-ink">{p.name}</span></span></h1>
+            <p class="intro-role reveal">{p.headline} <span class="quiet-separator">/</span> {p.location}</p>
           </div>
-          <div class="annotation" aria-hidden="true">
-            pick an object
-            <svg viewBox="0 0 51 28">
-              <path d="M2 4q10 25 44 7m-9-1 10 0-4 8" />
-            </svg>
+          <a class="scroll-cue" href="#positioning" aria-label="Continue to the story"><span>SCROLL TO DISCOVER</span><span class="scroll-rule" aria-hidden="true"></span></a>
+          <span class="scene-number">01 / THE INTRODUCTION</span>
+        </section>
+
+        <section class="scene scene-statement" id="positioning" aria-labelledby="position-title" data-scene>
+          <div class="statement-wrap">
+            <p class="eyebrow reveal">THE IDEA</p>
+            <h2 id="position-title" class="display reveal-line">{p.positioning}</h2>
+            <p class="scene-subline reveal">{p.pitch}</p>
           </div>
-          {p.objects.map((o, i) => (
-            <a
-              class={"object obj-" + o.type}
-              href={"#" + o.id}
-              data-object={o.id}
-              style={`--order:${i};--x:${o.position.x}%;--y:${o.position.y}%;--w:${o.position.width}%;--r:${o.position.angle}deg`}
-            >
-              <img
-                class="art"
-                {...dimensions(o.illustration)}
-                loading={i < 2 ? "eager" : "lazy"}
-                src={art(o.illustration)}
-                alt={o.alt}
-                draggable="false"
-              />
-              {["coffee", "tea"].includes(o.illustration) && (
-                <svg class="steam" viewBox="0 0 48 48" aria-hidden="true">
-                  <path d="M14 40c9-11-9-14-1-28" />
-                  <path d="M26 39c-8-10 10-17 3-29" />
-                </svg>
-              )}
-              <span class="tag">
-                <b>{String(i + 1).padStart(2, "0")}</b>
-                {o.label}
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 12 12"
-                  width="10"
-                  height="10"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <path d="M2 10l8-8m-6 0h6v6" />
-                </svg>
-              </span>
-            </a>
-          ))}
-          <a class="secret" href="#note" aria-label={"Inspect " + p.secret.alt}>
-            <img src={art(p.secret.illustration)} alt="" />
-          </a>
-          {p.theme.props.map((prop) => (
-            <img
-              class="prop"
-              src={art(prop.art)}
-              {...dimensions(prop.art)}
-              alt=""
-              aria-hidden="true"
-              style={`left:${prop.x}%;top:${prop.y}%;width:${prop.width}%;transform:rotate(${prop.angle}deg)`}
-            />
-          ))}
+          <span class="scene-number">02 / WHAT I BELIEVE</span>
+        </section>
+
+        <section class="scene scene-problem" aria-labelledby="problem-title" data-scene>
+          <div class="statement-wrap">
+            <p class="eyebrow reveal">THE PROBLEM I SOLVE</p>
+            <h2 id="problem-title" class="display reveal-line">{p.problem}</h2>
+          </div>
+          <div class="hairline-visual" aria-hidden="true"><i></i><span></span><i></i></div>
+          <span class="scene-number">03 / WHY IT MATTERS</span>
+        </section>
+
+        <div class="work-intro scene" aria-labelledby="work-title" data-scene>
+          <div class="statement-wrap">
+            <p class="eyebrow reveal">THE PROOF</p>
+            <h2 id="work-title" class="display reveal-line">The work.</h2>
+            <p class="scene-subline reveal">Real problems. Thoughtful solutions.</p>
+          </div>
+          <span class="scene-number">04 / SELECTED WORK</span>
         </div>
-      </div>
-      <section
-        id="quick"
-        class="quick paper"
-        aria-labelledby="quicktitle"
-        tabindex="-1"
-      >
-        <div class="folio">QUICK VIEW</div>
-        <h1 id="quicktitle">{p.name}</h1>
-        <p class="byline">{p.headline}</p>
-        <a class="action" href={resume} download>
-          Download résumé PDF ↓
-        </a>
-        {groups.map((type) => (
-          <section>
-            <h2 class="sectiontitle">
-              {p.objects.find((o) => o.type === type)?.label || type}
-            </h2>
-            <Content p={p} type={type} uid="quick" />
+
+        {p.projects.map((project, i) => (
+          <section class="project-chapter" aria-labelledby={"project-title-" + i} data-project>
+            <div class="project-sticky">
+              <div class="project-copy">
+                <p class="eyebrow project-label">PROJECT {index(i)} <span class="slash">/</span> {project.role}</p>
+                <h2 id={"project-title-" + i} class="project-headline">{project.outcome}</h2>
+                <p class="project-caption">{project.caption}</p>
+                <div class="project-details">
+                  <p class="project-title-small">{project.title}</p>
+                  <p>{project.result}</p>
+                  {project.links.length > 0 && <div class="project-links">{project.links.map(link => <a href={asset(link.url)} target="_blank" rel="noopener noreferrer">{link.label} <span aria-hidden="true">↗</span></a>)}</div>}
+                </div>
+              </div>
+              <div class="project-stage">
+                {project.media.some(m => m.kind === "image") ? (
+                  <div class="project-image"><img src={asset(project.media.find(m => m.kind === "image")!.url)} alt={project.media.find(m => m.kind === "image")!.alt} loading="lazy" /></div>
+                ) : (
+                  <div class={"product-render product-" + project.visual.kind} aria-label={project.title + " concept visualization"}>
+                    <div class="render-glow" aria-hidden="true"></div>
+                    <div class="render-device">
+                      <div class="render-topline"><span class="render-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>{project.visual.kicker}</span><span class="render-corner">↗</span></div>
+                      <div class="render-body">
+                        <div class="render-heading">{project.visual.title}</div>
+                        <div class="render-bars" aria-hidden="true"><b></b><b></b><b></b></div>
+                        <div class="render-rows">{project.visual.rows.map((row, j) => <div class="render-row"><span class="render-index">{index(j)}</span><span>{row}</span><span aria-hidden="true">↗</span></div>)}</div>
+                      </div>
+                      <div class="render-bottom"><span>{project.visual.tag}</span><span>{index(i)} — {String(p.projects.length).padStart(2, "0")}</span></div>
+                    </div>
+                  </div>
+                )}
+                <span class="visual-caption">DESIGN REPRESENTATION · {project.title.toUpperCase()}</span>
+              </div>
+              <div class="project-progress" aria-hidden="true"><span></span></div>
+            </div>
           </section>
         ))}
+
+        <section class="scene scene-numbers" aria-labelledby="numbers-title" data-scene>
+          <div class="numbers-inner">
+            <p class="eyebrow reveal">BY THE NUMBERS</p>
+            <h2 id="numbers-title" class="section-heading reveal-line">The details speak.</h2>
+            <div class="metrics-grid">
+              {p.numbers.map(n => (
+                <article class="metric-card">
+                  <div class="metric-value" data-count={n.value} data-suffix={n.suffix}>{n.value}{n.suffix}</div>
+                  <h3>{n.label}</h3>
+                  <p>{n.detail}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+          <span class="scene-number">05 / THE MEASURE</span>
+        </section>
+
+        <section class="scene scene-craft" aria-labelledby="craft-title" data-scene>
+          <div class="craft-inner">
+            <div class="craft-header">
+              <div><p class="eyebrow reveal">THE CRAFT</p><h2 id="craft-title" class="section-heading reveal-line">Thought in every detail.</h2></div>
+              <p class="craft-summary">{p.story}</p>
+            </div>
+            <div class="craft-grid">
+              {p.skills.map((skill, i) => (
+                <article class="craft-cell">
+                  <span class="cell-number">0{ i + 1 }</span>
+                  <h3>{skill.group}</h3>
+                  <p>{skill.items.join(" / ")}</p>
+                </article>
+              ))}
+              {p.credentials.map((cred, i) => (
+                <article class="craft-cell credential-cell">
+                  <span class="cell-number">C{ i + 1 }</span>
+                  <h3>{cred.title}</h3>
+                  <p>{cred.issuer} <span class="cred-status">· {cred.status}</span></p>
+                </article>
+              ))}
+            </div>
+          </div>
+          <span class="scene-number">06 / CAPABILITIES</span>
+        </section>
+
+        {p.testimonials.map((testimonial, i) => (
+          <section class="scene scene-testimonial" aria-labelledby={"testimonial-title-" + i} data-scene>
+            <div class="testimonial-inner"><p class="eyebrow reveal">IN THEIR WORDS</p><h2 id={"testimonial-title-" + i} class="testimonial-quote reveal-line">“{testimonial.quote}”</h2><p class="testimonial-credit reveal">{testimonial.author} <span>/ {testimonial.role}</span></p></div>
+            <span class="scene-number">07 / THE PEOPLE</span>
+          </section>
+        ))}
+
+        <section class="scene scene-surprise" aria-labelledby="surprise-title" data-scene>
+          <div class="surprise-inner">
+            <p class="eyebrow reveal">{p.surprise.signoff}</p>
+            <h2 id="surprise-title" class="display surprise-headline reveal-line">{p.surprise.headline}</h2>
+            <p class="surprise-detail reveal">{p.surprise.detail}</p>
+          </div>
+          <span class="scene-number">07 / ONE MORE THING</span>
+        </section>
+
+        <section class="scene scene-contact" id="contact" aria-labelledby="contact-title" data-scene>
+          <div class="contact-inner">
+            <p class="eyebrow reveal">THE INVITATION</p>
+            <h2 id="contact-title" class="display reveal-line">Let's make something matter.</h2>
+            <p class="contact-subline reveal">{p.sample ? "A sample portfolio. Switch to your own config to make it yours." : "Have a problem worth solving? I'd love to hear it."}</p>
+            {isContactable ? (
+              <a class="primary-action" href="#contact-form"><span>Get in touch</span><span class="action-arrow" aria-hidden="true">↗</span></a>
+            ) : (
+              <p class="empty-contact">Contact details can be added in portfolio.config.ts.</p>
+            )}
+          </div>
+          <span class="scene-number">08 / LET'S BEGIN</span>
+        </section>
+
+        {isContactable && (
+          <section class="contact-form-section" id="contact-form" aria-labelledby="message-title">
+            <div class="form-shell">
+              <div><p class="eyebrow">A CONVERSATION STARTS HERE</p><h2 id="message-title">Tell me what you're building.</h2><p class="form-intro">Just a few words are enough to get started.</p></div>
+              <form class="contact-form" method="post" action={p.contact.endpoint || "mailto:" + p.contact.email} data-contact data-address={p.contact.email}>
+                <label>Your email <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" maxlength="254" /></label>
+                <label>Your message <textarea name="message" required rows="5" placeholder="I have an idea…" maxlength="5000"></textarea></label>
+                <button class="form-submit" type="submit">Send message <span aria-hidden="true">↗</span></button>
+                <p class="form-feedback" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+          </section>
+        )}
+      </div>
+
+      <section class="recruiter-view" id="summary" tabindex="-1" aria-labelledby="summary-title">
+        <div class="summary-container">
+          <div class="summary-top"><span class="eyebrow">THE 30-SECOND VERSION</span><a class="back-story" href="#top">Experience the story <span aria-hidden="true">↗</span></a></div>
+          <h1 id="summary-title">{p.name}</h1>
+          <p class="summary-headline">{p.headline} <span aria-hidden="true">·</span> {p.location}</p>
+          <p class="summary-pitch">{p.summary}</p>
+          <div class="summary-cta"><a class="summary-download" href={resume} download>Download résumé <span aria-hidden="true">↓</span></a>{isContactable && <a href="#summary-contact">Contact <span aria-hidden="true">↗</span></a>}</div>
+          <div class="summary-section"><h2>Selected projects</h2><div class="summary-projects">{p.projects.slice(0, 3).map((project, i) => <article><span class="summary-index">{index(i)}</span><div><h3>{project.title}</h3><p class="summary-project-outcome">{project.outcome}</p><p>{project.summary} {project.result}</p></div></article>)}</div></div>
+          <div class="summary-columns"><div class="summary-section"><h2>Experience</h2>{p.experience.map(exp => <article class="summary-record"><span>{exp.date}</span><h3>{exp.title}</h3><p>{exp.detail}</p></article>)}</div><div class="summary-section"><h2>Skills & credentials</h2>{p.skills.map(skill => <article class="summary-record"><h3>{skill.group}</h3><p>{skill.items.join(" · ")}</p></article>)}{p.credentials.map(cred => <article class="summary-record"><h3>{cred.title}</h3><p>{cred.issuer} · {cred.status}</p></article>)}</div></div>
+          <div class="summary-section summary-contact" id="summary-contact"><h2>Let's connect.</h2>{isContactable && <a class="summary-download" href={p.contact.email ? "mailto:" + p.contact.email : "#contact-form"}>{p.contact.email ? "Email me" : "Send a message"} <span aria-hidden="true">↗</span></a>}{p.contact.links.map(link => <a class="external-link" href={link.url} target="_blank" rel="noopener noreferrer">{link.label} ↗</a>)}{!isContactable && !p.contact.links.length && <p>Contact details can be added in the configuration.</p>}</div>
+          <p class="summary-footer">{p.sample ? "Illustrative sample" : "Made with care"} <span>© {new Date().getFullYear()} {p.name}</span></p>
+        </div>
       </section>
     </main>
-    <footer>
-      <span>
-        <i class="online"></i>
-        {p.location}
-      </span>
-      <button id="ambient" type="button" aria-pressed="true" aria-label="Ambient motion">Ambient motion on</button>
-      <span class="footcenter">
-        <Icon name="cursor" /> Select an object to explore
-      </span>
-      <span>
-        THE DESK <i>/</i> {new Date().getUTCFullYear()}
-      </span>
-    </footer>
-    <dialog aria-labelledby="sheet-title">
-      <article class="paper sheet">
-        <div class="sheetbar">
-          <button class="back">← Back to desk</button>
-          <button class="close" aria-label="Close section">
-            ×
-          </button>
-        </div>
-        <div id="sheet-content"></div>
-      </article>
-    </dialog>
-    {p.objects.map((o, i) => (
-      <template id={"tpl-" + o.id}>
-        <div class="folio">
-          DESK OBJECT &nbsp; / &nbsp; {String(i + 1).padStart(2, "0")}
-        </div>
-        <h2 id="sheet-title">{o.label}</h2>
-        <Content p={p} type={o.type} />
-        {o.type === "credentials" && (
-          <a class="action" href={resume} download>
-            Download résumé PDF ↓
-          </a>
-        )}
-      </template>
-    ))}
-    <template id="tpl-note">
-      <div class="folio">A LITTLE FIND</div>
-      <h2 id="sheet-title">A personal note</h2>
-      <p class="lede">{p.secret.note}</p>
-      <p class="byline">— {p.firstName}</p>
-    </template>
-    <noscript>
-      <style>
-        .stage,
-        nav button,
-        .quick-button,
-        .footcenter {
-          display: none !important;
-        }
-        .quick {
-          display: block !important;
-        }
-      </style>
-    </noscript>
-    <script src="../scripts/desk.ts"></script>
+    <script>import "../scripts/keynote.ts";</script>
   </body>
 </html>
