@@ -94,11 +94,11 @@ const cover = imgContent[0]?.url;
       <div class="gallery-collections">
         {category.entries.map((entry, index) => {
           const caseStudy = p.projects.find(project => project.title === entry.projectTitle);
-          return <section class="gallery-collection" id={"collection-"+index} aria-labelledby={"collection-"+index}>
+          return <section class="gallery-collection" id={"collection-"+index} aria-labelledby={"collection-heading-"+index}>
             <div class="gallery-collection-head">
               <div>
                 <p class="eyebrow">{entry.label}</p>
-                <h2 id={"collection-"+index}>{entry.title}</h2>
+                <h2 id={"collection-heading-"+index}>{entry.title}</h2>
                 <p class="gallery-collection-description">{entry.description}</p>
               </div>
               <span class="gallery-collection-index">{String(index+1).padStart(2,"0")} / {String(category.entries.length).padStart(2,"0")}</span>
