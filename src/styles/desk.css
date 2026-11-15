@@ -815,3 +815,81 @@ body:has(dialog[open]) {
 .night :is(a, button, summary, input, textarea):focus-visible {
   outline-color: #f3dca6;
 }
+
+#ambient {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  padding: 5px;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+.quick-mode #ambient { display: none; }
+.window-light, .motes, .steam { pointer-events: none; position: absolute; }
+.window-light {
+  inset: 0;
+  background: linear-gradient(116deg, transparent 17%, #fff5ce29 24%, transparent 35%, #fff5ce20 38%, transparent 50%);
+}
+.night .window-light {
+  background: radial-gradient(ellipse at 24% 24%, #ffcf7528, transparent 48%);
+}
+.motes { inset: 0; overflow: hidden; }
+.motes i {
+  position: absolute;
+  left: 39%; top: 24%;
+  width: 3px; height: 3px; border-radius: 50%;
+  background: #fff6d9; box-shadow: 0 0 5px #fff2c9;
+  opacity: 0;
+}
+.motes i:nth-child(2) { left: 62%; top: 54%; animation-delay: -4s; }
+.motes i:nth-child(3) { left: 78%; top: 17%; animation-delay: -7s; }
+.motes i:nth-child(4) { left: 20%; top: 67%; animation-delay: -3s; }
+.steam {
+  width: 35%; height: 42%;
+  top: -8%; left: 27%;
+  fill: none; stroke: #fff8e7; stroke-width: 2.8; stroke-linecap: round;
+}
+.steam path { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  body:not(:has(.quick:target)) .object {
+    animation: place-object .59s cubic-bezier(.19,.78,.24,1.08) backwards;
+    animation-delay: calc(var(--order) * 48ms);
+  }
+  .annotation path { stroke-dasharray: 70; animation: draw-arrow .75s .3s backwards; }
+  .window-light { animation: window-drift 15s ease-in-out infinite alternate; }
+  .motes i { animation: dust-rise 9s ease-in-out infinite; }
+  .steam path { animation: steam-rise 3.8s ease-out infinite; }
+  .steam path + path { animation-delay: -1.9s; }
+  .tag, .tag svg { transition: transform .26s ease; }
+  .object:is(:focus-visible,:hover) .tag { transform: translateY(2px) rotate(-1.2deg); }
+  .object:is(:focus-visible,:hover) .tag svg { transform: translate(2px,-2px); }
+  .object:is(:focus-visible,:hover) .art {
+    transform: perspective(650px) translateY(-9px) rotateX(var(--tilt-x, 3deg)) rotateY(var(--tilt-y, -2deg)) rotate(calc(var(--r) + 1deg)) scale(1.035);
+  }
+  .object:active .art { transform: translateY(-2px) rotate(var(--r)) scale(.985); transition-duration: .08s; }
+  dialog[open]::backdrop { animation: fade-backdrop .25s ease-out; }
+  dialog .case[open] .casebody { animation: unfold .32s ease-out; }
+  body:has(dialog[open]) :is(.window-light,.motes i,.steam path),
+  .still :is(.window-light,.motes i,.steam path) { animation-play-state: paused; }
+}
+@media (prefers-reduced-motion: reduce) { #ambient { display: none; } }
+@keyframes place-object {
+  from { opacity: .45; translate: 0 -14px; rotate: -2deg; }
+  to { opacity: 1; translate: 0 0; rotate: 0deg; }
+}
+@keyframes draw-arrow { from { stroke-dashoffset: 70; } to { stroke-dashoffset: 0; } }
+@keyframes window-drift { to { transform: translateX(4%); opacity: .55; } }
+@keyframes dust-rise {
+  0%,100% { opacity: 0; }
+  30%,65% { opacity: .65; }
+  100% { transform: translate(24px,-29px); }
+}
+@keyframes steam-rise {
+  0% { transform: translate(0,8px); opacity: 0; }
+  38% { opacity: .64; }
+  100% { transform: translate(3px,-9px); opacity: 0; }
+}
+@keyframes unfold { from { opacity: .1; transform: translateY(-6px); } }
+@keyframes fade-backdrop { from { opacity: 0; } }

@@ -80,16 +80,47 @@ sound.onclick = () => {
     );
   play();
 };
+const ambient = $<HTMLButtonElement>("#ambient");
+function updateAmbient(on: boolean) {
+  body.classList.toggle("still", !on);
+  ambient.setAttribute("aria-pressed", String(on));
+  ambient.textContent = on ? "Ambient motion on" : "Ambient motion off";
+}
+updateAmbient(pref("ambient") !== "off");
+ambient.onclick = () => {
+  const on = body.classList.contains("still");
+  updateAmbient(on);
+  save("ambient", on ? "on" : "off");
+};
+let tilted: HTMLElement | null = null;
+function resetTilt() {
+  tilted?.style.removeProperty("--tilt-x");
+  tilted?.style.removeProperty("--tilt-y");
+  tilted = null;
+}
+stage.addEventListener("pointerleave", () => {
+  cancelAnimationFrame(frame);
+  resetTilt();
+});
 let frame = 0;
 stage.addEventListener("pointermove", (e) => {
   if (e.pointerType !== "mouse" || reduced.matches) return;
   cancelAnimationFrame(frame);
   frame = requestAnimationFrame(() => {
+    const object = (e.target as Element).closest<HTMLElement>(".object");
+    if (object !== tilted) resetTilt();
+    if (object) {
+      tilted = object;
+      const bounds = object.getBoundingClientRect();
+      object.style.setProperty("--tilt-x", (0.5 - (e.clientY - bounds.top) / bounds.height) * 12 + "deg");
+      object.style.setProperty("--tilt-y", ((e.clientX - bounds.left) / bounds.width - 0.5) * 14 + "deg");
+    }
     const r = stage.getBoundingClientRect();
     stage.style.setProperty("--mx", e.clientX - r.x + "px");
     stage.style.setProperty("--my", e.clientY - r.y + "px");
   });
 });
+let sheetOffset = { x: 0, y: 0, rotation: 0 };
 function route() {
   const id = location.hash.slice(1),
     isQuick = id === "quick",
@@ -104,6 +135,17 @@ function route() {
     });
   } else {
     gsap.set(layout, { clearProps: "transform,transformOrigin" });
+  }
+  if (dialog.open && !tpl && !isQuick) {
+    gsap.to(dialog, {
+      ...(reduced.matches ? {} : sheetOffset),
+      scale: reduced.matches ? 1 : 0.94, opacity: 0, duration: reduced.matches ? 0.08 : 0.19,
+      ease: "power2.in", onComplete: () => {
+        dialog.close();
+        opener?.focus({ preventScroll: true });
+      },
+    });
+    return;
   }
   if (dialog.open) {
     dialog.close();
@@ -128,9 +170,15 @@ function route() {
     ).find((a) => a.hash === location.hash) || null;
   const target = $("#sheet-content");
   target.replaceChildren(tpl.content.cloneNode(true));
+  sheetOffset = { x: 0, y: 12, rotation: 0 };
   if (opener && !reduced.matches) {
     const obj = opener.getBoundingClientRect(),
       r = layout.getBoundingClientRect();
+    sheetOffset = {
+      x: Math.max(-84, Math.min(84, (obj.x + obj.width / 2 - innerWidth / 2) * 0.24)),
+      y: Math.max(-44, Math.min(44, (obj.y + obj.height / 2 - innerHeight / 2) * 0.2)),
+      rotation: obj.x + obj.width / 2 < innerWidth / 2 ? -2 : 2,
+    };
     gsap.to(layout, {
       transformOrigin: `${obj.x - r.x + obj.width / 2}px ${obj.y - r.y + obj.height / 2}px`,
       scale: innerWidth > 800 ? 1.13 : 1.035,
@@ -142,8 +190,8 @@ function route() {
   dialog.scrollTop = 0;
   gsap.fromTo(
     dialog,
-    { opacity: 0, y: reduced.matches ? 0 : 9 },
-    { opacity: 1, y: 0, duration: reduced.matches ? 0.1 : 0.25 },
+    { opacity: 0, ...(reduced.matches ? { x: 0, y: 0, rotation: 0 } : sheetOffset), scale: reduced.matches ? 1 : 0.91 },
+    { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: reduced.matches ? 0.1 : 0.42, ease: "power3.out" },
   );
   $(".back").focus();
 }

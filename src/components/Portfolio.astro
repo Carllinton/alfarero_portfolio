@@ -73,6 +73,8 @@ const groups = [
     </header>
     <main id="workspace">
       <div class="stage" id="stage">
+        <div class="window-light" aria-hidden="true"></div>
+        <div class="motes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <div class="spot"></div>
         <div class="layout">
           <div class="intro">
@@ -100,7 +102,7 @@ const groups = [
               class={"object obj-" + o.type}
               href={"#" + o.id}
               data-object={o.id}
-              style={`--x:${o.position.x}%;--y:${o.position.y}%;--w:${o.position.width}%;--r:${o.position.angle}deg`}
+              style={`--order:${i};--x:${o.position.x}%;--y:${o.position.y}%;--w:${o.position.width}%;--r:${o.position.angle}deg`}
             >
               <img
                 class="art"
@@ -110,6 +112,12 @@ const groups = [
                 alt={o.alt}
                 draggable="false"
               />
+              {["coffee", "tea"].includes(o.illustration) && (
+                <svg class="steam" viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M14 40c9-11-9-14-1-28" />
+                  <path d="M26 39c-8-10 10-17 3-29" />
+                </svg>
+              )}
               <span class="tag">
                 <b>{String(i + 1).padStart(2, "0")}</b>
                 {o.label}
@@ -168,6 +176,7 @@ const groups = [
         <i class="online"></i>
         {p.location}
       </span>
+      <button id="ambient" type="button" aria-pressed="true" aria-label="Ambient motion">Ambient motion on</button>
       <span class="footcenter">
         <Icon name="cursor" /> Select an object to explore
       </span>
