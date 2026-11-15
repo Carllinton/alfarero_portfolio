@@ -49,66 +49,169 @@ function syncView() {
 window.addEventListener("hashchange", syncView);
 syncView();
 
-const animations = gsap.context(() => {
-  if (!isReduced()) {
-    const intro = gsap.timeline({ defaults: { ease } });
-    intro.from(".scene-intro .eyebrow", { opacity: 0, y: 20, duration: .75 })
-      .from(".hello", { opacity: 0, y: 32, duration: .75 }, "-=.25")
-      .fromTo(".name-ink", { clipPath: "inset(0 100% 0 0)", opacity: 1 }, { clipPath: "inset(0 0% 0 0)", duration: 1.45, ease: "power2.inOut" }, "+=.65")
-      .from(".intro-role", { opacity: 0, y: 15, duration: .9 }, "-=.3")
-      .from(".scroll-cue", { opacity: 0, duration: .7 }, "-=.15");
+// Stage the message first, the proof second, and the supporting detail last.
+// Headings stay as ordinary readable HTML until JavaScript enhances them.
+function prepareHeadline(element: HTMLElement): HTMLElement[] {
+  if (element.dataset.wordsReady === "true") {
+    return Array.from(element.querySelectorAll<HTMLElement>(".word-ink"));
+  }
+  const content = element.textContent?.trim() || "";
+  if (!content) return [];
+  element.setAttribute("aria-label", content);
+  const fragment = document.createDocumentFragment();
+  const words: HTMLElement[] = [];
+  content.split(/\\s+/).forEach((word, index) => {
+    if (index) fragment.append(document.createTextNode(" "));
+    const outer = document.createElement("span");
+    outer.className = "headline-word";
+    outer.setAttribute("aria-hidden", "true");
+    const inner = document.createElement("span");
+    inner.className = "word-ink";
+    inner.textContent = word;
+    outer.append(inner);
+    fragment.append(outer);
+    words.push(inner);
+  });
+  element.replaceChildren(fragment);
+  element.dataset.wordsReady = "true";
+  return words;
+}
 
-    $$(".scene:not(.scene-intro)").forEach(section => {
-      const items = Array.from(section.querySelectorAll<HTMLElement>(".reveal,.reveal-line"));
-      if (!items.length) return;
-      gsap.from(items, {
-        y: 48, opacity: 0, duration: 1.05, ease,
-        stagger: .16, immediateRender: false,
-        scrollTrigger: { trigger: section, start: "top 74%", toggleActions: "play none none none" }
-      });
+const chapters = $$<HTMLElement>(".story .scene, .story .project-chapter");
+const currentObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    entry.target.classList.toggle("is-current", entry.isIntersecting);
+  }
+}, { rootMargin: "-20% 0px -20% 0px", threshold: 0 });
+chapters.forEach(chapter => currentObserver.observe(chapter));
+
+// All GSAP effects belong to a context and can be cleanly reverted when a
+// visitor changes the operating system's reduced-motion setting.
+let animations: gsap.Context | undefined;
+function createAnimations() {
+  animations?.revert();
+  root.classList.remove("motion-ready");
+  if (isReduced()) {
+    gsap.set(".name-ink,.reveal,.reveal-line,.word-ink,.render-device,.project-copy,.project-image", { clearProps: "all" });
+    $$(".metric-value").forEach(el => {
+      el.textContent = (el.dataset.count || "0") + (el.dataset.suffix || "");
+    });
+    return;
+  }
+
+  // Split headlines before the timeline exists. Each word carries its own
+  // accessible hidden visual span, while the heading keeps its accessible name.
+  const wordsByHeadline = $$(".reveal-line").map(element => ({
+    element, words: prepareHeadline(element),
+  }));
+
+  root.classList.add("motion-ready");
+  animations = gsap.context(() => {
+    const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+    intro.fromTo(".scene-intro .eyebrow",
+      { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .74 })
+      .fromTo(".hello", { opacity: 0, y: 38 },
+        { opacity: 1, y: 0, duration: .8 }, "-=.22")
+      .fromTo(".name-ink",
+        { clipPath: "inset(0 100% 0 0)", opacity: 1 },
+        { clipPath: "inset(0 0% 0 0)", duration: 1.35, ease: "power2.inOut" }, "+=.55")
+      .fromTo(".intro-role", { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: .85 }, "-=.24")
+      .fromTo(".scroll-cue", { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: .65 }, "-=.12");
+
+    wordsByHeadline.forEach(({ element, words }) => {
+      if (!words.length) return;
+      gsap.fromTo(words,
+        { yPercent: 112, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: .92, ease: "power3.out",
+          stagger: .078, scrollTrigger: {
+            trigger: element.closest(".scene") || element,
+            start: "top 76%", once: true,
+          },
+        });
+    });
+
+    // A smaller preface is revealed before its headline, and the supporting
+    // sentence appears only after the eye has arrived at the main statement.
+    $$(".scene:not(.scene-intro)").forEach(scene => {
+      const introText = Array.from(scene.querySelectorAll<HTMLElement>(".reveal:not(.reveal-line)"));
+      if (!introText.length) return;
+      gsap.fromTo(introText,
+        { y: 23, opacity: 0 },
+        { y: 0, opacity: 1, duration: .8, stagger: .22,
+          ease: "power3.out",
+          scrollTrigger: { trigger: scene, start: "top 74%", once: true },
+        });
     });
 
     $$(".project-chapter").forEach(chapter => {
-      const copy = chapter.querySelector(".project-copy");
-      const device = chapter.querySelector(".render-device,.project-image");
-      const progress = chapter.querySelector(".project-progress span");
+      const copy = chapter.querySelector<HTMLElement>(".project-copy");
+      const device = chapter.querySelector<HTMLElement>(".render-device,.project-image");
+      const progress = chapter.querySelector<HTMLElement>(".project-progress span");
       if (!copy || !device) return;
-      const tl = gsap.timeline({
+
+      // Scene A: reveal the outcome before the visual. Scene B: the product
+      // moves forward. Scene C: supporting copy retreats as proof holds focus.
+      const timeline = gsap.timeline({
         defaults: { ease: "none" },
         scrollTrigger: {
-          trigger: chapter,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: .7,
-          invalidateOnRefresh: true
-        }
+          trigger: chapter, start: "top top", end: "bottom bottom",
+          scrub: .65, invalidateOnRefresh: true,
+        },
       });
-      tl.fromTo(device, { yPercent: 20, scale: .83, opacity: .3, rotation: -4 }, { yPercent: 0, scale: 1, opacity: 1, rotation: 0, duration: .48 })
-        .fromTo(copy, { y: 55, opacity: .4 }, { y: 0, opacity: 1, duration: .4 }, 0)
-        .to(device, { yPercent: -9, scale: 1.06, duration: .52 }, .48)
-        .to(copy, { y: -35, opacity: .75, duration: .5 }, .5);
-      if (progress) gsap.fromTo(progress, { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { trigger: chapter, start: "top top", end: "bottom bottom", scrub: true } });
+      timeline
+        .fromTo(copy, { opacity: .22, y: 58 },
+          { opacity: 1, y: 0, duration: .3 }, 0)
+        .fromTo(device, { opacity: .22, yPercent: 18, scale: .84, rotation: -5 },
+          { opacity: 1, yPercent: 0, scale: 1, rotation: 0, duration: .5 }, .17)
+        .to(device, { yPercent: -6, scale: 1.045, duration: .3 }, .7)
+        .to(copy, { opacity: .78, y: -18, duration: .25 }, .75);
+      if (progress) {
+        gsap.fromTo(progress, { scaleX: 0 },
+          { scaleX: 1, ease: "none",
+            scrollTrigger: { trigger: chapter,
+              start: "top top", end: "bottom bottom", scrub: true },
+          });
+      }
     });
 
-    $$(".craft-cell").forEach(cell => {
-      gsap.from(cell, { opacity: 0, y: 24, duration: .75, ease,
-        scrollTrigger: { trigger: cell, start: "top 90%", once: true } });
+    // The top indicator tracks reading progress, but never blocks controls.
+    const reading = $<HTMLElement>(".reading-progress");
+    const story = $<HTMLElement>(".story");
+    if (reading && story) {
+      gsap.fromTo(reading, { scaleX: 0 },
+        { scaleX: 1, ease: "none", scrollTrigger: {
+          trigger: story, start: "top top", end: "bottom bottom",
+          scrub: .3, invalidateOnRefresh: true,
+        } });
+    }
+
+    $$(".craft-cell").forEach((cell, index) => {
+      gsap.fromTo(cell, { opacity: 0, y: 28 },
+        { opacity: 1, y: 0, duration: .85, ease: "power3.out",
+          delay: (index % 2) * .09,
+          scrollTrigger: { trigger: cell, start: "top 91%", once: true },
+        });
     });
-  }
-  $$(".metric-value").forEach(element => {
-    const value = Number(element.dataset.count || "0");
-    const suffix = element.dataset.suffix || "";
-    if (!Number.isFinite(value)) return;
-    const state = { value: isReduced() ? value : 0 };
-    if (isReduced()) { element.textContent = String(value) + suffix; return; }
-    gsap.to(state, {
-      value, duration: 1.7, ease,
-      scrollTrigger: { trigger: element, start: "top 90%", once: true },
-      onUpdate: () => { element.textContent = String(Math.round(state.value)) + suffix; }
+
+    $$(".metric-value").forEach(element => {
+      const value = Number(element.dataset.count || "0");
+      const suffix = element.dataset.suffix || "";
+      if (!Number.isFinite(value)) return;
+      const state = { value: 0 };
+      gsap.to(state, { value, duration: 1.8, ease: "power3.out",
+        scrollTrigger: { trigger: element, start: "top 88%", once: true },
+        onUpdate: () => {
+          element.textContent = String(Math.round(state.value)) + suffix;
+        },
+        onComplete: () => { element.textContent = String(value) + suffix; },
+      });
     });
   });
-});
-
+  ScrollTrigger.refresh();
+}
+createAnimations();
 // Tiny magnetism, only when pointer precision and motion preference allow it.
 // Reset the transform on exit: buttons remain perfectly clickable without JS.
 if (matchMedia("(hover:hover) and (pointer:fine)").matches) {
@@ -150,7 +253,4 @@ document.addEventListener("submit", async event => {
   } finally { button.disabled = false; }
 });
 
-reduce.addEventListener("change", () => {
-  animations.revert();
-  ScrollTrigger.refresh();
-});
+reduce.addEventListener("change", createAnimations);
