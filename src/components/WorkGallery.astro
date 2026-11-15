@@ -43,25 +43,58 @@ const cover = imgContent[0]?.url;
       </div>
     </header>
     <main id="gallery-content">
-      <div class="gallery-hero">
+      <section class="gallery-hero" aria-labelledby="gallery-title">
         <div class="gallery-hero-inner">
-          <p class="eyebrow gallery-eyebrow">{category.eyebrow}</p>
-          <h1>{category.title}<span class="identity-period">.</span></h1>
-          <p class="gallery-deck">{category.description}</p>
-          <a class="gallery-jump" href="#collections">See the projects <span aria-hidden="true">↓</span></a>
-          <div class="gallery-meta"><span>{String(category.entries.length).padStart(2,"0")} collections</span><span>{totalImages ? totalImages + " original visuals" : "Case studies & concepts"}</span></div>
+          <div class="gallery-hero-heading">
+            <p class="eyebrow gallery-eyebrow">{category.eyebrow}</p>
+            <h1 id="gallery-title">{category.title}<span class="identity-period">.</span></h1>
+          </div>
+          <div class="gallery-hero-description">
+            <p class="gallery-deck">{category.description}</p>
+            <div class="gallery-meta"><span>{String(category.entries.length).padStart(2,"0")} collections</span><span>{totalImages ? totalImages + " original visuals" : "Case studies & concepts"}</span></div>
+          </div>
         </div>
-        <div class="gallery-hero-decoration" aria-hidden="true">{category.visual === "design" ? "Aa" : category.visual === "network" ? "↗" : category.visual === "editorial" ? "¶" : "{ }"}</div>
-      </div>
+      </section>
       <nav class="gallery-category-nav" aria-label="Work categories">
         {categoryList.map((item, index) => (
           <a class={item.slug === category.slug ? "gallery-category-link is-active" : "gallery-category-link"} href={prefix + "works/" + encodeURIComponent(item.slug) + "/"} aria-current={item.slug === category.slug ? "page" : undefined}><span>{String(index+1).padStart(2,"0")}</span> {item.title}</a>
         ))}
       </nav>
-      <div class="gallery-collections" id="collections">
+      <section class="gallery-overview" id="collections" aria-labelledby="overview-heading">
+        <div class="gallery-overview-heading">
+          <div>
+            <p class="eyebrow">THE COLLECTION</p>
+            <h2 id="overview-heading">Explore the projects<span class="identity-period">.</span></h2>
+          </div>
+          <span class="gallery-overview-total">{String(category.entries.length).padStart(2, "0")} works</span>
+        </div>
+        <div class="gallery-overview-grid">
+          {category.entries.map((entry, i) => {
+            const thumbnail = entry.images[0];
+            const caseStudy = p.projects.find(project => project.title === entry.projectTitle);
+            return <a class="gallery-overview-card" href={"#collection-" + i} aria-label={"Browse " + entry.title + " collection"}>
+              <div class="gallery-overview-image">
+                {thumbnail ? (
+                  <img src={asset(thumbnail.url)} alt={thumbnail.alt} loading={i < 3 ? "eager" : "lazy"} decoding="async" />
+                ) : (
+                  <div class="gallery-overview-concept" aria-hidden="true">
+                    <span class="concept-kicker">{caseStudy?.visual.kicker || entry.label}</span>
+                    <strong>{caseStudy?.visual.title || entry.title}</strong>
+                    <span class="concept-tag">{caseStudy?.visual.tag || category.title}</span>
+                  </div>
+                )}
+                <span class="gallery-overview-number">{String(i + 1).padStart(2, "0")}</span>
+              </div>
+              <div class="gallery-overview-card-title"><strong>{entry.title}</strong><span aria-hidden="true">↗</span></div>
+              <p>{entry.label}</p>
+            </a>;
+          })}
+        </div>
+      </section>
+      <div class="gallery-collections">
         {category.entries.map((entry, index) => {
           const caseStudy = p.projects.find(project => project.title === entry.projectTitle);
-          return <section class="gallery-collection" aria-labelledby={"collection-"+index}>
+          return <section class="gallery-collection" id={"collection-"+index} aria-labelledby={"collection-"+index}>
             <div class="gallery-collection-head">
               <div>
                 <p class="eyebrow">{entry.label}</p>
