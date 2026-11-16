@@ -13,11 +13,11 @@ const safeAccent = /^#[0-9a-fA-F]{6}$/.test(p.accent) ? p.accent : "#9BE9BB";
 const index = (n: number) => String(n + 1).padStart(2, "0");
 ---
 <!doctype html>
-<html lang="en" data-theme="dark" style={`--accent:${safeAccent}`}>
+<html lang="en" data-theme="dark" data-brand={p.brand?.style || "neutral"} style={`--accent:${safeAccent}`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101112" />
+    <meta name="theme-color" content={p.brand ? "#0A0C10" : "#101112"} />
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content={p.summary} />
     <meta property="og:type" content="website" />
@@ -26,7 +26,10 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
     <meta property="og:url" content={canonical.toString()} />
     <meta property="og:image" content={preview.toString()} />
     <link rel="canonical" href={canonical.toString()} />
-    <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    {p.brand ? <link rel="icon" href={asset(p.brand.favicon)} type="image/png" /> : <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />}
     <title>{p.name} — Made with purpose.</title>
   </head>
   <body>
@@ -34,7 +37,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
     <header class="site-header">
       <span class="reading-progress" aria-hidden="true"></span>
       <a class="identity" href="#top" aria-label={"Back to the beginning — " + p.name}>
-        <span class="identity-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        {p.brand ? <img class="brand-monogram" src={asset(p.brand.monogram)} alt="" width="70" height="32" /> : <span class="identity-mark" aria-hidden="true"><span></span><span></span><span></span></span>}
         <span>{p.firstName}<span class="identity-period">.</span></span>
       </a>
       <div class="header-end">
@@ -47,6 +50,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
     <main id="top">
       <div class="story" id="story-start">
         <section class="scene scene-intro" data-visual={p.heroVisual} aria-labelledby="intro-title" data-scene>
+          {p.brand && <img class="brand-hero-watermark" src={asset(p.brand.wordmark)} alt="" aria-hidden="true" width="1200" height="420" loading="eager" />}
           <div class="intro-inner">
             <span class="eyebrow reveal">AN INTRODUCTION, NOT A RESUME</span>
             <h1 id="intro-title" class="intro-title"><span class="hello reveal">Hello.</span><span class="name-reveal" aria-label={p.name}><span class="name-ink">{p.name}</span></span></h1>
@@ -189,6 +193,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
 
         <section class="scene scene-contact" id="contact" aria-labelledby="contact-title" data-scene>
           <div class="contact-inner">
+            {p.brand && <img class="brand-contact-signature" src={asset(p.brand.wordmark)} alt="" aria-hidden="true" width="270" height="88" loading="lazy" />}
             <p class="eyebrow reveal">THE INVITATION</p>
             <h2 id="contact-title" class="display reveal-line">Let's make something matter.</h2>
             <p class="contact-subline reveal">{p.sample ? "A sample portfolio. Switch to your own config to make it yours." : "Have a problem worth solving? I'd love to hear it."}</p>
@@ -218,7 +223,7 @@ const index = (n: number) => String(n + 1).padStart(2, "0");
 
       <section class="recruiter-view" id="summary" tabindex="-1" aria-labelledby="summary-title">
         <div class="summary-container">
-          <div class="summary-top"><span class="eyebrow">THE 30-SECOND VERSION</span><a class="back-story" href="#top">Experience the story <span aria-hidden="true">↗</span></a></div>
+          <div class="summary-top">{p.brand && <img class="brand-summary-mark" src={asset(p.brand.monogram)} alt={p.firstName + " brand mark"} width="84" height="36" />}<span class="eyebrow">THE 30-SECOND VERSION</span><a class="back-story" href="#top">Experience the story <span aria-hidden="true">↗</span></a></div>
           <h1 id="summary-title">{p.name}</h1>
           <p class="summary-headline">{p.headline} <span aria-hidden="true">·</span> {p.location}</p>
           <p class="summary-pitch">{p.summary}</p>
