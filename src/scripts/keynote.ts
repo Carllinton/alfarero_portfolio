@@ -25,7 +25,7 @@ function setTheme(theme: "dark" | "light") {
   const word = button.querySelector(".theme-word");
   if (word) word.textContent = theme === "light" ? "Dark" : "Light";
   const meta = $<HTMLMetaElement>('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "light" ? "#f4f2ed" : "#101112";
+  if (meta) meta.content = root.dataset.brand === "precision" ? (theme === "light" ? "#F4F5F7" : "#0A0C10") : (theme === "light" ? "#f4f2ed" : "#101112");
 }
 const storedTheme = preference("theme");
 setTheme(storedTheme === "light" || storedTheme === "dark"
