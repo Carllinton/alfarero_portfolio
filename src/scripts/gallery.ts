@@ -19,7 +19,7 @@ function setTheme(next: "dark" | "light") {
     if (word) word.textContent = next === "light" ? "Dark" : "Light";
   }
   const meta = $<HTMLMetaElement>('meta[name="theme-color"]');
-  if (meta) meta.content = next === "light" ? "#f4f2ed" : "#101112";
+  if (meta) meta.content = root.dataset.brand === "precision" ? (next === "light" ? "#F4F5F7" : "#0A0C10") : (next === "light" ? "#f4f2ed" : "#101112");
 }
 setTheme(store("theme") === "light" || (!store("theme") && matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark");
 themeBtn?.addEventListener("click", () => {
