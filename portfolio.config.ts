@@ -65,6 +65,8 @@ export interface Profile {
   problem: string;
   heroVisual: HeroVisualStyle;
   accent: string;
+  /** Optional identity assets; absent on profession demo profiles. */
+  brand?: { style: "precision"; monogram: string; wordmark: string; favicon: string };
   projects: Project[];
   workCategories: WorkCategory[];
   numbers: { value: number; suffix: string; label: string; detail: string }[];
@@ -747,7 +749,13 @@ const developer: Profile = {
   positioning: "I make complex systems feel simple.",
   problem: "The next step should always feel obvious.",
   heroVisual: "technical",
-  accent: "#9BE9BB",
+  accent: "#86F7C2",
+  brand: {
+    style: "precision",
+    monogram: "brand/ca-mark.png",
+    wordmark: "brand/carl-wordmark.png",
+    favicon: "brand/ca-favicon.png",
+  },
   workCategories: developerCategories,
   projects: [
     makeProject(
