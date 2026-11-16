@@ -16,11 +16,11 @@ const pageTitle = `${category.title} — ${p.firstName} Portfolio`;
 const pageDescription = category.description;
 ---
 <!doctype html>
-<html lang="en" data-theme="dark" style={`--accent:${accent}`}>
+<html lang="en" data-theme="dark" data-brand={p.brand?.style || "neutral"} style={`--accent:${accent}`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#101112" />
+    <meta name="theme-color" content={p.brand ? "#0A0C10" : "#101112"} />
     <meta name="description" content={category.description} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={category.title + " — " + p.name} />
@@ -28,14 +28,17 @@ const pageDescription = category.description;
     <meta property="og:url" content={canonical.toString()} />
     {cover && <meta property="og:image" content={asset(cover)} />}
     <link rel="canonical" href={canonical.toString()} />
-    <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    {p.brand ? <link rel="icon" href={asset(p.brand.favicon)} type="image/png" /> : <link rel="icon" href={base + "/art/favicon.svg"} type="image/svg+xml" />}
     <title>{pageTitle}</title>
   </head>
   <body class="gallery-page">
     <a class="a11y-skip" href="#gallery-content">Skip to works</a>
     <header class="site-header gallery-header">
       <a class="identity" href={home} aria-label={"Back to " + p.name + "'s portfolio"}>
-        <span class="identity-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        {p.brand ? <img class="brand-monogram" src={asset(p.brand.monogram)} alt="" width="70" height="32" /> : <span class="identity-mark" aria-hidden="true"><span></span><span></span><span></span></span>}
         <span>{p.firstName}<span class="identity-period">.</span></span>
       </a>
       <div class="header-end">
@@ -46,6 +49,7 @@ const pageDescription = category.description;
     </header>
     <main id="gallery-content">
       <section class="gallery-hero" aria-labelledby="gallery-title">
+        {p.brand && <img class="brand-gallery-watermark" src={asset(p.brand.monogram)} alt="" aria-hidden="true" width="450" height="200" loading="eager" />}
         <div class="gallery-hero-inner">
           <div class="gallery-hero-heading">
             <p class="eyebrow gallery-eyebrow">{category.eyebrow}</p>
@@ -143,7 +147,7 @@ const pageDescription = category.description;
         })}
       </div>
       <footer class="gallery-footer">
-        <div><p class="eyebrow">KEEP EXPLORING</p><h2>More than one way to create.</h2></div>
+        <div>{p.brand && <img class="brand-footer-signature" src={asset(p.brand.wordmark)} alt="" aria-hidden="true" width="230" height="75" loading="lazy" />}<p class="eyebrow">KEEP EXPLORING</p><h2>More than one way to create.</h2></div>
         <div class="gallery-footer-links">
           {categoryList.filter(item => item.slug !== category.slug).map(item => (
             <a href={prefix + "works/" + encodeURIComponent(item.slug) + "/"}>{item.title}<span aria-hidden="true">↗</span></a>
